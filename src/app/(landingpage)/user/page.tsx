@@ -19,6 +19,7 @@ import {
   Sparkles,
 } from "lucide-react"
 import { Button } from "@/components/ui/button"
+import { Input } from "@/components/ui/input";
 
 export default function TechspireMarketplace() {
   const [isMenuOpen, setIsMenuOpen] = useState(false)
@@ -244,20 +245,22 @@ export default function TechspireMarketplace() {
               transition={{ duration: 0.8, delay: 0.4 }}
               className="flex flex-col sm:flex-row gap-4 justify-center mb-16"
             >
-              <Button
+             
+
+              <Input
+                type="text"
+                placeholder="Search for products, startups, or mentors"
+                className="w-full sm:w-80 bg-white border border-gray-300 rounded-lg px-4 py-4  focus:outline-none focus:ring-2 focus:ring-blue-600 transition-colors"
+              />
+
+               <Button
                 size="lg"
                 className="bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-lg px-8 py-3"
               >
-                Get Started
+                View Products
                 <ArrowRight className="ml-2 w-5 h-5" />
-              </Button>
-              <Button
-                size="lg"
-                variant="outline"
-                className="text-lg px-8 py-3 border-2 border-gray-300 hover:border-blue-600 bg-transparent"
-              >
-                View Marketplace
-              </Button>
+              </Button> 
+
             </motion.div>
 
             {/* Floating Cards Animation */}
