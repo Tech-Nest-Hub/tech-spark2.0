@@ -1,4 +1,4 @@
-"use client"
+"use client";
 
 import { motion } from "framer-motion"
 import { useState, useEffect } from "react"
@@ -143,8 +143,16 @@ export default function TechspireMarketplace() {
 
             {/* Mobile menu button */}
             <div className="md:hidden">
-              <Button variant="ghost" size="icon" onClick={() => setIsMenuOpen(!isMenuOpen)}>
-                {isMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
+              <Button
+                variant="ghost"
+                size="icon"
+                onClick={() => setIsMenuOpen(!isMenuOpen)}
+              >
+                {isMenuOpen ? (
+                  <X className="w-6 h-6" />
+                ) : (
+                  <Menu className="w-6 h-6" />
+                )}
               </Button>
             </div>
           </div>
@@ -158,26 +166,43 @@ export default function TechspireMarketplace() {
             className="md:hidden bg-white border-t border-gray-200"
           >
             <div className="px-4 py-2 space-y-2">
-              <a href="#home" className="block py-2 text-gray-700 hover:text-blue-600">
+              <a
+                href="#home"
+                className="block py-2 text-gray-700 hover:text-blue-600"
+              >
                 Home
               </a>
-              <a href="#features" className="block py-2 text-gray-700 hover:text-blue-600">
+              <a
+                href="#features"
+                className="block py-2 text-gray-700 hover:text-blue-600"
+              >
                 Features
               </a>
-              <a href="#tracks" className="block py-2 text-gray-700 hover:text-blue-600">
+              <a
+                href="#tracks"
+                className="block py-2 text-gray-700 hover:text-blue-600"
+              >
                 How It Works
               </a>
-              <a href="#about" className="block py-2 text-gray-700 hover:text-blue-600">
+              <a
+                href="#about"
+                className="block py-2 text-gray-700 hover:text-blue-600"
+              >
                 About
               </a>
-              <Button className="w-full mt-2 bg-gradient-to-r from-blue-600 to-purple-600">Get Started</Button>
+              <Button className="w-full mt-2 bg-gradient-to-r from-blue-600 to-purple-600">
+                Get Started
+              </Button>
             </div>
           </motion.div>
         )}
       </nav>
 
       {/* Hero Section */}
-      <section id="home" className="pt-24 pb-16 px-4 sm:px-6 lg:px-8 overflow-hidden">
+      <section
+        id="home"
+        className="pt-24 pb-16 px-4 sm:px-6 lg:px-8 overflow-hidden"
+      >
         <div className="max-w-7xl mx-auto">
           <div className="text-center">
             <motion.h1
@@ -191,7 +216,9 @@ export default function TechspireMarketplace() {
                 Techspire Marketplace
               </span>
               <br />
-              <span className="text-3xl sm:text-4xl lg:text-5xl">Empowering Campus Commerce</span>
+              <span className="text-3xl sm:text-4xl lg:text-5xl">
+                Empowering Campus Commerce
+              </span>
             </motion.h1>
 
             <motion.p
@@ -200,7 +227,8 @@ export default function TechspireMarketplace() {
               transition={{ duration: 0.8, delay: 0.2 }}
               className="text-xl text-gray-600 mb-8 max-w-3xl mx-auto"
             >
-              A digital platform for college startups to connect, showcase, and grow within a thriving campus ecosystem.
+              A digital platform for college startups to connect, showcase, and
+              grow within a thriving campus ecosystem.
             </motion.p>
 
             <motion.div
@@ -258,7 +286,9 @@ export default function TechspireMarketplace() {
                   className="absolute w-32 h-20 sm:w-40 sm:h-24 rounded-lg shadow-lg cursor-pointer"
                   style={{
                     background: `linear-gradient(135deg, ${
-                      card.id % 2 === 0 ? "rgb(59, 130, 246), rgb(147, 51, 234)" : "rgb(16, 185, 129), rgb(6, 182, 212)"
+                      card.id % 2 === 0
+                        ? "rgb(59, 130, 246), rgb(147, 51, 234)"
+                        : "rgb(16, 185, 129), rgb(6, 182, 212)"
                     })`,
                   }}
                 >
@@ -283,7 +313,8 @@ export default function TechspireMarketplace() {
               transition={{ duration: 0.8, delay: 1.5 }}
               className="text-gray-600 mt-8"
             >
-              Startups can showcase their innovations, and students can discover amazing products and services.
+              Startups can showcase their innovations, and students can discover
+              amazing products and services.
             </motion.p>
           </div>
         </div>
@@ -299,9 +330,12 @@ export default function TechspireMarketplace() {
             viewport={{ once: true }}
             className="text-center mb-16"
           >
-            <h2 className="text-3xl sm:text-4xl font-bold text-gray-900 mb-4">How It Works</h2>
+            <h2 className="text-3xl sm:text-4xl font-bold text-gray-900 mb-4">
+              How It Works
+            </h2>
             <p className="text-xl text-gray-600 max-w-3xl mx-auto">
-              Our platform is built around six core tracks that create a comprehensive ecosystem for campus commerce.
+              Our platform is built around six core tracks that create a
+              comprehensive ecosystem for campus commerce.
             </p>
           </motion.div>
 
@@ -321,7 +355,9 @@ export default function TechspireMarketplace() {
                 >
                   {track.icon}
                 </div>
-                <h3 className="text-xl font-semibold text-gray-900 mb-3">{track.title}</h3>
+                <h3 className="text-xl font-semibold text-gray-900 mb-3">
+                  {track.title}
+                </h3>
                 <p className="text-gray-600">{track.description}</p>
               </motion.div>
             ))}
@@ -330,7 +366,10 @@ export default function TechspireMarketplace() {
       </section>
 
       {/* Features Section */}
-      <section id="features" className="py-16 px-4 sm:px-6 lg:px-8 bg-gradient-to-br from-blue-50 to-purple-50">
+      <section
+        id="features"
+        className="py-16 px-4 sm:px-6 lg:px-8 bg-gradient-to-br from-blue-50 to-purple-50"
+      >
         <div className="max-w-7xl mx-auto">
           <motion.div
             initial={{ opacity: 0, y: 30 }}
@@ -339,9 +378,12 @@ export default function TechspireMarketplace() {
             viewport={{ once: true }}
             className="text-center mb-16"
           >
-            <h2 className="text-3xl sm:text-4xl font-bold text-gray-900 mb-4">Feature Highlights</h2>
+            <h2 className="text-3xl sm:text-4xl font-bold text-gray-900 mb-4">
+              Feature Highlights
+            </h2>
             <p className="text-xl text-gray-600 max-w-3xl mx-auto">
-              Discover what makes Techspire Marketplace the perfect platform for campus entrepreneurs.
+              Discover what makes Techspire Marketplace the perfect platform for
+              campus entrepreneurs.
             </p>
           </motion.div>
 
@@ -359,8 +401,12 @@ export default function TechspireMarketplace() {
                 <div className="w-16 h-16 bg-gradient-to-r from-blue-600 to-purple-600 rounded-lg flex items-center justify-center text-white mb-6 mx-auto">
                   {feature.icon}
                 </div>
-                <h3 className="text-xl font-semibold text-gray-900 mb-4 text-center">{feature.title}</h3>
-                <p className="text-gray-600 text-center">{feature.description}</p>
+                <h3 className="text-xl font-semibold text-gray-900 mb-4 text-center">
+                  {feature.title}
+                </h3>
+                <p className="text-gray-600 text-center">
+                  {feature.description}
+                </p>
               </motion.div>
             ))}
           </div>
@@ -370,7 +416,10 @@ export default function TechspireMarketplace() {
       {/* CTA Section */}
       <section className="py-16 px-4 sm:px-6 lg:px-8 bg-gradient-to-r from-blue-600 to-purple-600 relative overflow-hidden">
         <div className="absolute inset-0 bg-black/10"></div>
-        <motion.div style={{ y: scrollY * -0.5 }} className="absolute inset-0 opacity-20">
+        <motion.div
+          style={{ y: scrollY * -0.5 }}
+          className="absolute inset-0 opacity-20"
+        >
           <div className="absolute top-10 left-10 w-20 h-20 bg-white/20 rounded-full"></div>
           <div className="absolute top-32 right-20 w-16 h-16 bg-white/10 rounded-full"></div>
           <div className="absolute bottom-20 left-1/4 w-24 h-24 bg-white/15 rounded-full"></div>
@@ -394,7 +443,8 @@ export default function TechspireMarketplace() {
             viewport={{ once: true }}
             className="text-xl text-blue-100 mb-8"
           >
-            Join thousands of student entrepreneurs who are already transforming their campus communities.
+            Join thousands of student entrepreneurs who are already transforming
+            their campus communities.
           </motion.p>
           <motion.div
             initial={{ opacity: 0, y: 30 }}
@@ -402,7 +452,10 @@ export default function TechspireMarketplace() {
             transition={{ duration: 0.8, delay: 0.4 }}
             viewport={{ once: true }}
           >
-            <Button size="lg" className="bg-white text-blue-600 hover:bg-gray-100 text-lg px-8 py-3 font-semibold">
+            <Button
+              size="lg"
+              className="bg-white text-blue-600 hover:bg-gray-100 text-lg px-8 py-3 font-semibold"
+            >
               Join the Movement
               <ChevronRight className="ml-2 w-5 h-5" />
             </Button>
@@ -422,7 +475,8 @@ export default function TechspireMarketplace() {
                 <span className="text-xl font-bold">Techspire Marketplace</span>
               </div>
               <p className="text-gray-400 mb-4 max-w-md">
-                Empowering campus commerce through innovative digital solutions for student entrepreneurs.
+                Empowering campus commerce through innovative digital solutions
+                for student entrepreneurs.
               </p>
               <div className="flex space-x-4">
                 <div className="w-8 h-8 bg-gray-800 rounded-full flex items-center justify-center hover:bg-blue-600 transition-colors cursor-pointer">
@@ -441,22 +495,34 @@ export default function TechspireMarketplace() {
               <h3 className="text-lg font-semibold mb-4">Quick Links</h3>
               <ul className="space-y-2">
                 <li>
-                  <a href="#home" className="text-gray-400 hover:text-white transition-colors">
+                  <a
+                    href="#home"
+                    className="text-gray-400 hover:text-white transition-colors"
+                  >
                     Home
                   </a>
                 </li>
                 <li>
-                  <a href="#features" className="text-gray-400 hover:text-white transition-colors">
+                  <a
+                    href="#features"
+                    className="text-gray-400 hover:text-white transition-colors"
+                  >
                     Features
                   </a>
                 </li>
                 <li>
-                  <a href="#tracks" className="text-gray-400 hover:text-white transition-colors">
+                  <a
+                    href="#tracks"
+                    className="text-gray-400 hover:text-white transition-colors"
+                  >
                     How It Works
                   </a>
                 </li>
                 <li>
-                  <a href="#about" className="text-gray-400 hover:text-white transition-colors">
+                  <a
+                    href="#about"
+                    className="text-gray-400 hover:text-white transition-colors"
+                  >
                     About
                   </a>
                 </li>
@@ -467,22 +533,34 @@ export default function TechspireMarketplace() {
               <h3 className="text-lg font-semibold mb-4">Support</h3>
               <ul className="space-y-2">
                 <li>
-                  <a href="#" className="text-gray-400 hover:text-white transition-colors">
+                  <a
+                    href="#"
+                    className="text-gray-400 hover:text-white transition-colors"
+                  >
                     FAQ
                   </a>
                 </li>
                 <li>
-                  <a href="#" className="text-gray-400 hover:text-white transition-colors">
+                  <a
+                    href="#"
+                    className="text-gray-400 hover:text-white transition-colors"
+                  >
                     Contact
                   </a>
                 </li>
                 <li>
-                  <a href="#" className="text-gray-400 hover:text-white transition-colors">
+                  <a
+                    href="#"
+                    className="text-gray-400 hover:text-white transition-colors"
+                  >
                     Privacy Policy
                   </a>
                 </li>
                 <li>
-                  <a href="#" className="text-gray-400 hover:text-white transition-colors">
+                  <a
+                    href="#"
+                    className="text-gray-400 hover:text-white transition-colors"
+                  >
                     Terms of Service
                   </a>
                 </li>
@@ -491,10 +569,12 @@ export default function TechspireMarketplace() {
           </div>
 
           <div className="border-t border-gray-800 mt-8 pt-8 text-center">
-            <p className="text-gray-400">© 2024 Techspire Marketplace. All rights reserved.</p>
+            <p className="text-gray-400">
+              © 2024 Techspire Marketplace. All rights reserved.
+            </p>
           </div>
         </div>
       </footer>
     </div>
-  )
+  );
 }
