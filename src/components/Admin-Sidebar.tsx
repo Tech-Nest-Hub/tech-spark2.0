@@ -11,6 +11,8 @@ import {
   MessageSquare,
   DollarSign,
   MessageCircle,
+  Settings,
+  LogOut,
 } from "lucide-react"
 
 import {
@@ -27,6 +29,8 @@ import {
   SidebarRail,
 } from "@/components/ui/sidebar"
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu"
+import { Button } from "./ui/button"
+import { useClerk } from "@clerk/nextjs"
 
 // Navigation items
 const navigationItems = [
@@ -77,6 +81,7 @@ const communicationItems = [
 ]
 
 export function AdminSidebar() {
+  const { signOut } = useClerk();
   return (
     <Sidebar collapsible="icon">
       <SidebarHeader>
@@ -88,7 +93,7 @@ export function AdminSidebar() {
                   <LayoutDashboard className="size-4" />
                 </div>
                 <div className="grid flex-1 text-left text-sm leading-tight">
-                  <span className="truncate font-semibold">Laravel Starter Kit</span>
+                  <span className="truncate font-semibold">Tech Nest Market Place</span>
                   <span className="truncate text-xs">Admin Panel</span>
                 </div>
               </a>
@@ -199,15 +204,12 @@ export function AdminSidebar() {
                   Account
                 </DropdownMenuItem>
                 <DropdownMenuItem>
-                  <Lock />
-                  Security
+                  <Settings />
+                  Settings
                 </DropdownMenuItem>
-                <DropdownMenuItem>
-                  <Palette />
-                  Preferences
-                </DropdownMenuItem>
-                <DropdownMenuItem>
-                  <span>Sign out</span>
+                <DropdownMenuItem onClick={() => signOut()}>
+                  <LogOut/>
+                  Sign Out
                 </DropdownMenuItem>
               </DropdownMenuContent>
             </DropdownMenu>
