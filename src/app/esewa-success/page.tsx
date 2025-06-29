@@ -1,9 +1,15 @@
 "use client";
 import { useSearchParams, useRouter } from "next/navigation";
-import { useEffect } from "react";
+import { Suspense, useEffect } from "react";
 
 export default function EsewaSuccessPage() {
-  const searchParams = useSearchParams();
+ return <>
+ <Suspense>
+  <Sus />
+  </Suspense></>
+}
+function Sus() {
+   const searchParams = useSearchParams();
   const router = useRouter();
 
   useEffect(() => {

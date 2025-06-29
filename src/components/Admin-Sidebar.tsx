@@ -215,7 +215,8 @@ export function AdminSidebar() {
                 align="end"
                 sideOffset={4}
               >
-                <DropdownMenuItem>
+                <DropdownMenuItem onClick={()=> router.push("/admin/profile")}>
+                  {/* condo */}
                   <User2 />
                   Account
                 </DropdownMenuItem>
