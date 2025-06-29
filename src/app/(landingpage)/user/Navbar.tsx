@@ -7,6 +7,7 @@ import { Menu, X } from "lucide-react"
 import { useState, useEffect } from "react"
 import logo from '@/components/ui/technest.jpg'
 import Image from "next/image"
+import { useClerk, useUser } from "@clerk/nextjs"
 
 const navigationLinks = [
   { href: "/", label: "Home" },
@@ -15,10 +16,17 @@ const navigationLinks = [
 ]
 
 const Navbar = () => {
+  const { signOut } = useClerk();
+
+
+  const handleLogout = async () => {
+    await signOut();
+    router.push("/");
+  };
   const router = useRouter()
   const [isMenuOpen, setIsMenuOpen] = useState(false)
   const [scrolled, setScrolled] = useState(false)
-
+  const { user } = useUser();
   // Handle scroll effect
   useEffect(() => {
     const handleScroll = () => {
@@ -56,11 +64,10 @@ const Navbar = () => {
       <motion.nav
         initial={{ y: -100 }}
         animate={{ y: 0 }}
-        className={`fixed top-0 w-full z-50 transition-all duration-300 ${
-          scrolled
+        className={`fixed top-0 w-full z-50 transition-all duration-300 ${scrolled
             ? "bg-white/95 backdrop-blur-lg border-b border-gray-200/50 shadow-sm"
             : "bg-white/80 backdrop-blur-md border-b border-gray-200/30"
-        }`}
+          }`}
       >
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center h-16">
@@ -78,7 +85,7 @@ const Navbar = () => {
                 whileHover={{ rotate: 5 }}
                 transition={{ type: "spring", stiffness: 300 }}
               >
-                <span className="text-white font-bold text-lg"><Image src={logo} alt={""} className="rounded-md"/></span>
+                <span className="text-white font-bold text-lg"><Image src={logo} alt={""} className="rounded-md" /></span>
               </motion.div>
               <span className="text-xl font-bold bg-gradient-to-r from-gray-900 to-gray-700 bg-clip-text text-transparent">
                 TechNest
@@ -104,21 +111,30 @@ const Navbar = () => {
 
             {/* Desktop Auth Buttons */}
             <div className="hidden md:flex items-center space-x-3">
-              <Button
+              {user ? <Button
                 variant="ghost"
-                onClick={() => router.push("/roles")}
+                onClick={() => handleLogout()}
                 className="text-gray-700 hover:text-blue-600 hover:bg-blue-50 transition-all duration-200"
               >
-                Login
-              </Button>
-              <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
+                Log Out
+              </Button> : <>
                 <Button
+                  variant="ghost"
                   onClick={() => router.push("/roles")}
-                  className="bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white shadow-lg hover:shadow-xl transition-all duration-200"
+                  className="text-gray-700 hover:text-blue-600 hover:bg-blue-50 transition-all duration-200"
                 >
-                  Get Started
+                  Login
                 </Button>
-              </motion.div>
+                <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
+                  <Button
+                    onClick={() => router.push("/roles")}
+                    className="bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white shadow-lg hover:shadow-xl transition-all duration-200"
+                  >
+                    Get Started
+                  </Button>
+                </motion.div></>
+              }
+
             </div>
 
             {/* Mobile menu button */}
