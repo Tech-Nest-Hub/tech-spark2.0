@@ -10,7 +10,10 @@ export default function Page() {
   //ask
   return (
     <div className="flex h-screen items-center justify-center">
-      <SignIn signUpUrl={`/sign-up?role=${role}`} redirectUrl={`/${role}`} />
+      <SignIn
+        signUpUrl={`/sign-up?role=${role}`}
+        redirectUrl={`/${role.toLowerCase()}`}
+      />
     </div>
   );
 }
