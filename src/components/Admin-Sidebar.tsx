@@ -1,5 +1,17 @@
 "use client"
-import { LayoutDashboard, User, Lock, Palette,ChevronUp, User2 } from "lucide-react"
+import {
+  LayoutDashboard,
+  Lock,
+  Palette,
+  ChevronUp,
+  User2,
+  Package,
+  BarChart3,
+  ClipboardList,
+  MessageSquare,
+  DollarSign,
+  MessageCircle,
+} from "lucide-react"
 
 import {
   Sidebar,
@@ -15,7 +27,6 @@ import {
   SidebarRail,
 } from "@/components/ui/sidebar"
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu"
-import Link from "next/link"
 
 // Navigation items
 const navigationItems = [
@@ -23,6 +34,45 @@ const navigationItems = [
     title: "Dashboard",
     url: "/admin",
     icon: LayoutDashboard,
+  },
+]
+
+const businessItems = [
+  {
+    title: "Products",
+    url: "/admin/products",
+    icon: Package,
+  },
+  {
+    title: "Order Management",
+    url: "/admin/orders",
+    icon: ClipboardList,
+  },
+  {
+    title: "Revenues",
+    url: "/admin/revenues",
+    icon: DollarSign,
+  },
+]
+
+const analyticsItems = [
+  {
+    title: "Analysis",
+    url: "/admin/analysis",
+    icon: BarChart3,
+  },
+]
+
+const communicationItems = [
+  {
+    title: "Admin Messages",
+    url: "/admin/messages",
+    icon: MessageSquare,
+  },
+  {
+    title: "Feedback",
+    url: "/admin/feedback",
+    icon: MessageCircle,
   },
 ]
 
@@ -38,7 +88,7 @@ export function AdminSidebar() {
                   <LayoutDashboard className="size-4" />
                 </div>
                 <div className="grid flex-1 text-left text-sm leading-tight">
-                  <span className="truncate font-semibold">Tech Nest MarketPlace</span>
+                  <span className="truncate font-semibold">Laravel Starter Kit</span>
                   <span className="truncate text-xs">Admin Panel</span>
                 </div>
               </a>
@@ -52,6 +102,60 @@ export function AdminSidebar() {
           <SidebarGroupContent>
             <SidebarMenu>
               {navigationItems.map((item) => (
+                <SidebarMenuItem key={item.title}>
+                  <SidebarMenuButton asChild>
+                    <a href={item.url}>
+                      <item.icon />
+                      <span>{item.title}</span>
+                    </a>
+                  </SidebarMenuButton>
+                </SidebarMenuItem>
+              ))}
+            </SidebarMenu>
+          </SidebarGroupContent>
+        </SidebarGroup>
+
+        <SidebarGroup>
+          <SidebarGroupLabel>Business</SidebarGroupLabel>
+          <SidebarGroupContent>
+            <SidebarMenu>
+              {businessItems.map((item) => (
+                <SidebarMenuItem key={item.title}>
+                  <SidebarMenuButton asChild>
+                    <a href={item.url}>
+                      <item.icon />
+                      <span>{item.title}</span>
+                    </a>
+                  </SidebarMenuButton>
+                </SidebarMenuItem>
+              ))}
+            </SidebarMenu>
+          </SidebarGroupContent>
+        </SidebarGroup>
+
+        <SidebarGroup>
+          <SidebarGroupLabel>Analytics</SidebarGroupLabel>
+          <SidebarGroupContent>
+            <SidebarMenu>
+              {analyticsItems.map((item) => (
+                <SidebarMenuItem key={item.title}>
+                  <SidebarMenuButton asChild>
+                    <a href={item.url}>
+                      <item.icon />
+                      <span>{item.title}</span>
+                    </a>
+                  </SidebarMenuButton>
+                </SidebarMenuItem>
+              ))}
+            </SidebarMenu>
+          </SidebarGroupContent>
+        </SidebarGroup>
+
+        <SidebarGroup>
+          <SidebarGroupLabel>Communication</SidebarGroupLabel>
+          <SidebarGroupContent>
+            <SidebarMenu>
+              {communicationItems.map((item) => (
                 <SidebarMenuItem key={item.title}>
                   <SidebarMenuButton asChild>
                     <a href={item.url}>
@@ -92,9 +196,7 @@ export function AdminSidebar() {
               >
                 <DropdownMenuItem>
                   <User2 />
-                 <Link href="/admin/profile">
-                     Profile
-                    </Link>
+                  Account
                 </DropdownMenuItem>
                 <DropdownMenuItem>
                   <Lock />
