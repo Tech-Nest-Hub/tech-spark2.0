@@ -1,8 +1,8 @@
 "use client";
 
+import { motion } from "framer-motion";
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
-import { useClerk, useUser } from "@clerk/nextjs";
 import {
   ArrowRight,
   Users,
@@ -13,20 +13,26 @@ import {
   Zap,
   Shield,
   Network,
+  Menu,
+  X,
   ChevronRight,
   Sparkles,
+  Search,
 } from "lucide-react";
-import Navbar from "./Navbar";
-import { motion } from "framer-motion";
-import { Button } from "@/components/ui/button";
+
 import axios from "axios";
+import { useClerk, useUser } from "@clerk/nextjs";
+
+import { Button } from "@/components/ui/button"
+import { Input } from "@/components/ui/input";
+
 
 export default function TechspireMarketplace() {
-
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [scrollY, setScrollY] = useState(0);
+  const [cardsSpread, setCardsSpread] = useState(false);
   const router = useRouter();
-  const [scrollY, setScrollY] = useState(0)
-  const [cardsSpread, setCardsSpread] = useState(false)
-
+  const { user } = useUser();
 
   useEffect(() => {
     const handleScroll = () => setScrollY(window.scrollY);
@@ -191,8 +197,117 @@ export default function TechspireMarketplace() {
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 to-blue-50">
       {/* Navigation */}
-     
-      <Navbar/>
+      <nav className="fixed top-0 w-full bg-white/80 backdrop-blur-md z-50 border-b border-gray-200">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="flex justify-between items-center h-16">
+            <motion.div
+              initial={{ opacity: 0, x: -20 }}
+              animate={{ opacity: 1, x: 0 }}
+              className="flex items-center space-x-2"
+            >
+              <div className="w-8 h-8 bg-gradient-to-r from-blue-600 to-purple-600 rounded-lg flex items-center justify-center">
+                <span className="text-white font-bold text-sm">T</span>
+              </div>
+              <span className="text-xl font-bold text-gray-900">Techspire</span>
+            </motion.div>
+
+            {/* Desktop Navigation */}
+            <div className="hidden md:flex items-center space-x-8">
+              <a
+                href="#home"
+                className="text-gray-700 hover:text-blue-600 transition-colors"
+              >
+                Home
+              </a>
+
+              <a
+                href="/products"
+                className="text-gray-700 hover:text-blue-600 transition-colors"
+              >
+                Products
+              </a>
+              <a
+                href="#tracks"
+                className="text-gray-700 hover:text-blue-600 transition-colors"
+              >
+                Pages
+              </a>
+            </div>
+            {user ? (
+              <Button
+                onClick={() => handleLogout()}
+                className=" hidden md:block bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700"
+              >
+                Log out
+              </Button>
+            ) : (
+              <Button
+                onClick={() => router.push("/roles")}
+                className=" hidden md:block bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700"
+              >
+                Get Started
+              </Button>
+            )}
+
+            {/* Mobile menu button */}
+            <div className="md:hidden">
+              <Button
+                variant="ghost"
+                size="icon"
+                onClick={() => setIsMenuOpen(!isMenuOpen)}
+              >
+                {isMenuOpen ? (
+                  <X className="w-6 h-6" />
+                ) : (
+                  <Menu className="w-6 h-6" />
+                )}
+              </Button>
+            </div>
+          </div>
+        </div>
+
+        {/* Mobile Navigation */}
+        {isMenuOpen && (
+          <motion.div
+            initial={{ opacity: 0, y: -20 }}
+            animate={{ opacity: 1, y: 0 }}
+            className="md:hidden bg-white border-t border-gray-200"
+          >
+            <div className="px-4 py-2 space-y-2">
+              <a
+                href="#home"
+                className="block py-2 text-gray-700 hover:text-blue-600"
+              >
+                Home
+              </a>
+              <a
+                href="#features"
+                className="block py-2 text-gray-700 hover:text-blue-600"
+              >
+                Features
+              </a>
+              <a
+                href="#tracks"
+                className="block py-2 text-gray-700 hover:text-blue-600"
+              >
+                How It Works
+              </a>
+              <a
+                href="#about"
+                className="block py-2 text-gray-700 hover:text-blue-600"
+              >
+                About
+              </a>
+              <Button
+                onClick={() => router.push("/roles")}
+                className="w-full mt-2 bg-gradient-to-r from-blue-600 to-purple-600"
+              >
+                Get Started
+              </Button>
+            </div>
+          </motion.div>
+        )}
+      </nav>
 
       {/* Hero Section */}
       <section
@@ -231,26 +346,24 @@ export default function TechspireMarketplace() {
               initial={{ opacity: 0, y: 30 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.8, delay: 0.4 }}
-              className="flex flex-col sm:flex-row gap-4 justify-center mb-16"
+              className="flex flex-col sm:flex-row gap-2 justify-center mb-16"
             >
-              <Button
-                size="lg"
-                className="bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-lg px-8 py-3"
-              >
-                Get Started
-                <ArrowRight className="ml-2 w-5 h-5" />
-              </Button>
-              <Button
-                size="lg"
-                variant="outline"
-                className="text-lg px-8 py-3 border-2 border-gray-300 hover:border-blue-600 bg-transparent"
-              >
-                View Marketplace
-              </Button>
+             
+
+              <Input
+                type="text"
+                placeholder="Search for products or startups..."
+                className="w-full sm:w-80 bg-white border border-gray-300 rounded-lg px-4 py-4  focus:outline-none focus:ring-2 focus:ring-blue-600 transition-colors"
+              />
+              
+              <button className="border border-slate-500 cursor-pointer rounded-full p-2"><Search className="w-5 h-4 " /></button>
+
+              
+
             </motion.div>
 
             {/* Floating Cards Animation */}
-            <div className="relative h-96 flex items-center justify-center">
+            <div className=" hidden relative h-96 md:flex items-center justify-center">
               {floatingCards.map((card) => (
                 <motion.div
                   key={card.id}
