@@ -2,6 +2,7 @@
 
 import { motion } from "framer-motion"
 import { useState, useEffect } from "react"
+import { useRouter } from 'next/navigation'
 import {
   ArrowRight,
   Users,
@@ -23,6 +24,7 @@ export default function TechspireMarketplace() {
   const [isMenuOpen, setIsMenuOpen] = useState(false)
   const [scrollY, setScrollY] = useState(0)
   const [cardsSpread, setCardsSpread] = useState(false)
+  const router = useRouter()
 
   useEffect(() => {
     const handleScroll = () => setScrollY(window.scrollY)
@@ -137,13 +139,9 @@ export default function TechspireMarketplace() {
 
             </div>
 
-            <Button
-              onClick={() => router.push("/sign-in")}
-              className=" hidden md:block bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700"
-            >
-              {/* //Satkar ko lagi */}
-              Get Started
-            </Button>
+              <Button onClick={() => router.push('/roles')} className=" hidden md:block bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700">
+                Get Started
+              </Button>
 
             {/* Mobile menu button */}
             <div className="md:hidden">
@@ -194,9 +192,14 @@ export default function TechspireMarketplace() {
               >
                 About
               </a>
-              <Button className="w-full mt-2 bg-gradient-to-r from-blue-600 to-purple-600">
-                Get Started
-              </Button>
+            <Button
+            onClick={() => router.push('/roles')}
+            className="w-full mt-2 bg-gradient-to-r from-blue-600 to-purple-600"
+            >
+            Get Started
+         </Button>
+
+
             </div>
           </motion.div>
         )}
