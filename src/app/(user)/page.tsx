@@ -74,22 +74,29 @@ export default function TechspireMarketplace() {
 
             {/* Desktop Navigation */}
             <div className="hidden md:flex items-center space-x-8">
-              <a href="#home" className="text-gray-700 hover:text-blue-600 transition-colors">
+
+            <div className="flex items-center space-x-4">
+                  <a href="#home" className="text-gray-700 hover:text-blue-600 transition-colors">
                 Home
               </a>
               <a href="#features" className="text-gray-700 hover:text-blue-600 transition-colors">
-                Features
+                Products
               </a>
               <a href="#tracks" className="text-gray-700 hover:text-blue-600 transition-colors">
-                How It Works
+                Pages
               </a>
-              <a href="#about" className="text-gray-700 hover:text-blue-600 transition-colors">
+            </div>
+              {/* <a href="#about" className="text-gray-700 hover:text-blue-600 transition-colors">
                 About
-              </a>
-              <Button className="bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700">
+              </a> */}
+
+             
+             
+            </div>
+            
+              <Button className=" hidden md:block bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700">
                 Get Started
               </Button>
-            </div>
 
             {/* Mobile menu button */}
             <div className="md:hidden">
