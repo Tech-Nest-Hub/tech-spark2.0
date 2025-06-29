@@ -28,8 +28,8 @@ export async function POST(req: NextRequest) {
 
     const order = await prisma.order.create({ data });
 
-    const successUrl = `${process.env.DOMAIN}/esewa-success?oid=${order.id}&amt=${order.amount}`;
-    const failUrl = `${process.env.DOMAIN}/esewa-fail?oid=${order.id}`;
+    const successUrl = `https://tech-spark-2-0.netlify.app/esewa-success?oid=${order.id}&amt=${order.amount}`;
+    const failUrl = `https://tech-spark-2-0.netlify.app/esewa-fail?oid=${order.id}`;
     const esewaUrl = `https://rc.esewa.com.np/epay/main?amt=${
       order.amount
     }&pdc=0&psc=0&txAmt=0&tAmt=${order.amount}&pid=${
