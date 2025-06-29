@@ -1,6 +1,7 @@
 import prisma from "@/lib/prisma";
 import { auth, clerkClient } from "@clerk/nextjs/server";
 import { NextRequest, NextResponse } from "next/server";
+import { cookies } from "next/headers";
 
 enum Role {
   ADMIN = "ADMIN",
@@ -16,9 +17,20 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
     const existing = await prisma.user.findUnique({
       where: { clerkId: userId },
     });
+    if (existing) {
+      // Set cookie if not already
+      (
+        await // Set cookie if not already
+        cookies()
+      ).set("role", existing.role, {
+        path: "/",
+        httpOnly: true,
+        secure: process.env.NODE_ENV === "production",
+        maxAge: 60 * 60 * 24 * 7, // 7 days
+      });
 
-    if (existing) return NextResponse.json({ user: existing });
-
+      return NextResponse.json({ user: existing });
+    }
     const { searchParams } = new URL(req.url);
     const role = searchParams.get("role");
     console.log("Role: ", role);
@@ -39,7 +51,12 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
         role: role === Role.ADMIN ? Role.ADMIN : Role.USER,
       },
     });
-
+    (await cookies()).set("role", newUser.role, {
+      path: "/",
+      httpOnly: true,
+      secure: process.env.NODE_ENV === "production",
+      maxAge: 60 * 60 * 24 * 7, // 7 days
+    });
     console.log("New user created: ", newUser);
 
     return NextResponse.json({ user: newUser });

@@ -167,40 +167,6 @@ export function CheckoutSidebar({
           </CardContent>
         </Card>
 
-        {/* Payment Form */}
-        <Card className="mb-6">
-          <CardHeader>
-            <CardTitle className="text-sm flex items-center gap-2">
-              <CreditCard className="w-4 h-4" />
-              Payment Information
-            </CardTitle>
-          </CardHeader>
-          <CardContent className="space-y-4">
-            <div>
-              <Label htmlFor="email">Email</Label>
-              <Input id="email" type="email" placeholder="your@email.com" />
-            </div>
-            <div>
-              <Label htmlFor="cardNumber">Card Number</Label>
-              <Input id="cardNumber" placeholder="1234 5678 9012 3456" />
-            </div>
-            <div className="grid grid-cols-2 gap-4">
-              <div>
-                <Label htmlFor="expiry">Expiry</Label>
-                <Input id="expiry" placeholder="MM/YY" />
-              </div>
-              <div>
-                <Label htmlFor="cvc">CVC</Label>
-                <Input id="cvc" placeholder="123" />
-              </div>
-            </div>
-            <div>
-              <Label htmlFor="name">Cardholder Name</Label>
-              <Input id="name" placeholder="John Doe" />
-            </div>
-          </CardContent>
-        </Card>
-
         {/* Checkout Button */}
         <Button
           onClick={() => handleEsewaPay(product.id.toString())}
