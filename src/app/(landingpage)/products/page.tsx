@@ -113,11 +113,7 @@ export default function ProductsPage() {
     <Navbar/>
     <div ref={containerRef} className="min-h-screen bg-gradient-to-br from-slate-50 to-slate-100 p-6 mt-12">
       <div className="max-w-7xl mx-auto">
-        {/* Header */}
-        <div ref={headerRef} className="mb-8">
-          <p className="text-gray-600">Discover amazing products across all categories</p>
-        </div>
-
+       
         {/* Search and Filter */}
         <div className="mb-8 flex flex-col md:flex-row gap-4">
           <div className="relative flex-1">

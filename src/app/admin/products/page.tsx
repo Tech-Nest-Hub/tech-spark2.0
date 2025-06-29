@@ -1,7 +1,6 @@
 "use client"
 
-
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
@@ -30,19 +29,25 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog"
-import { Search, Plus, Eye, Edit, Trash2, Star, StarHalf, Package, DollarSign, Tag } from "lucide-react"
+import { Search, Plus, Eye, Edit, Trash2, Star, StarHalf, Package, DollarSign, Tag, Loader2 } from "lucide-react"
 import { toast } from "sonner"
-import { initialProducts } from "./data"
-import ProductsHeader from "./header"
 
-
-// Sample product data
-
-
-type Product = (typeof initialProducts)[0]
+// Updated Product type to match your API
+type Product = {
+  id: number
+  name: string
+  photo: string
+  tag: string
+  rating: number
+  reviews: number
+  ecoFriendly: boolean
+  createdAt?: string
+  updatedAt?: string
+}
 
 export default function ProductsPage() {
-  const [products, setProducts] = useState<Product[]>(initialProducts)
+  const [products, setProducts] = useState<Product[]>([])
+  const [loading, setLoading] = useState(true)
   const [searchTerm, setSearchTerm] = useState("")
   const [selectedProduct, setSelectedProduct] = useState<Product | null>(null)
   const [isCreateDialogOpen, setIsCreateDialogOpen] = useState(false)
@@ -51,22 +56,46 @@ export default function ProductsPage() {
   const [editingProduct, setEditingProduct] = useState<Product | null>(null)
   const [currentPage, setCurrentPage] = useState(1)
   const [rowsPerPage, setRowsPerPage] = useState(10)
+  const [isSubmitting, setIsSubmitting] = useState(false)
 
   // Form state for create/edit
   const [formData, setFormData] = useState({
     name: "",
-    category: "",
-    price: "",
-    stock: "",
-    status: "Active",
-    description: "",
+    photo: "",
+    tag: "",
+    rating: "",
+    reviews: "",
+    ecoFriendly: false,
   })
+
+  // Fetch products from API
+  const fetchProducts = async () => {
+    try {
+      setLoading(true)
+      const response = await fetch('/api/products')
+      if (!response.ok) {
+        throw new Error('Failed to fetch products')
+      }
+      const data = await response.json()
+      setProducts(data)
+    } catch (error) {
+      console.error('Error fetching products:', error)
+      toast.error("Failed to fetch products")
+    } finally {
+      setLoading(false)
+    }
+  }
+
+  // Load products on component mount
+  useEffect(() => {
+    fetchProducts()
+  }, [])
 
   // Filter products based on search term
   const filteredProducts = products.filter(
     (product) =>
       product.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      product.category.toLowerCase().includes(searchTerm.toLowerCase()),
+      product.tag.toLowerCase().includes(searchTerm.toLowerCase()),
   )
 
   // Pagination logic
@@ -98,72 +127,126 @@ export default function ProductsPage() {
   }
 
   // Handle form submission for create
-  const handleCreate = () => {
-    const newProduct: Product = {
-      id: Math.max(...products.map((p) => p.id)) + 1,
-      name: formData.name,
-      category: formData.category,
-      price: Number.parseInt(formData.price),
-      stock: Number.parseInt(formData.stock),
-      status: formData.status as "Active" | "Inactive",
-      description: formData.description,
-      image: "/placeholder.svg?height=200&width=200",
-      rating: 0,
-      reviews: [],
+  const handleCreate = async () => {
+    if (!formData.name || !formData.tag) {
+      toast.error("Please fill in required fields")
+      return
     }
 
-    setProducts([...products, newProduct])
-    setIsCreateDialogOpen(false)
-    resetForm()
-    toast.success("Product Created", {
-      description: "Product has been successfully created.",
-    })
+    try {
+      setIsSubmitting(true)
+      const response = await fetch('/api/products', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          name: formData.name,
+          photo: formData.photo || '/placeholder.svg?height=200&width=200',
+          tag: formData.tag,
+          rating: parseFloat(formData.rating) || 0,
+          reviews: parseInt(formData.reviews) || 0,
+          ecoFriendly: formData.ecoFriendly,
+        }),
+      })
+
+      if (!response.ok) {
+        throw new Error('Failed to create product')
+      }
+
+      const newProduct = await response.json()
+      setProducts([...products, newProduct])
+      setIsCreateDialogOpen(false)
+      resetForm()
+      toast.success("Product Created", {
+        description: "Product has been successfully created.",
+      })
+    } catch (error) {
+      console.error('Error creating product:', error)
+      toast.error("Failed to create product")
+    } finally {
+      setIsSubmitting(false)
+    }
   }
 
   // Handle form submission for edit
-  const handleEdit = () => {
-    if (!editingProduct) return
+  const handleEdit = async () => {
+    if (!editingProduct || !formData.name || !formData.tag) {
+      toast.error("Please fill in required fields")
+      return
+    }
 
-    const updatedProducts = products.map((product) =>
-      product.id === editingProduct.id
-        ? {
-          ...product,
+    try {
+      setIsSubmitting(true)
+      const response = await fetch(`/api/products/${editingProduct.id}`, {
+        method: 'PATCH',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
           name: formData.name,
-          category: formData.category,
-          price: Number.parseInt(formData.price),
-          stock: Number.parseInt(formData.stock),
-          status: formData.status as "Active" | "Inactive",
-          description: formData.description,
-        }
-        : product,
-    )
+          photo: formData.photo || '/placeholder.svg?height=200&width=200',
+          tag: formData.tag,
+          rating: parseFloat(formData.rating) || 0,
+          reviews: parseInt(formData.reviews) || 0,
+          ecoFriendly: formData.ecoFriendly,
+        }),
+      })
 
-    setProducts(updatedProducts)
-    setIsEditDialogOpen(false)
-    setEditingProduct(null)
-    resetForm()
-    toast.success("Product Updated", {
-      description: "Product has been successfully updated.",
-    })
+      if (!response.ok) {
+        throw new Error('Failed to update product')
+      }
+
+      const updatedProduct = await response.json()
+      const updatedProducts = products.map((product) =>
+        product.id === editingProduct.id ? updatedProduct : product
+      )
+
+      setProducts(updatedProducts)
+      setIsEditDialogOpen(false)
+      setEditingProduct(null)
+      resetForm()
+      toast.success("Product Updated", {
+        description: "Product has been successfully updated.",
+      })
+    } catch (error) {
+      console.error('Error updating product:', error)
+      toast.error("Failed to update product")
+    } finally {
+      setIsSubmitting(false)
+    }
   }
 
   // Handle delete
-  const handleDelete = (productId: number) => {
-    setProducts(products.filter((product) => product.id !== productId))
-    toast("Product Deleted", {
-      description: "Product has been successfully deleted.",
-    })
+  const handleDelete = async (productId: number) => {
+    try {
+      const response = await fetch(`/api/products/${productId}`, {
+        method: 'DELETE',
+      })
+
+      if (!response.ok) {
+        throw new Error('Failed to delete product')
+      }
+
+      setProducts(products.filter((product) => product.id !== productId))
+      toast.success("Product Deleted", {
+        description: "Product has been successfully deleted.",
+      })
+    } catch (error) {
+      console.error('Error deleting product:', error)
+      toast.error("Failed to delete product")
+    }
   }
 
   // Reset form
   const resetForm = () => {
     setFormData({
       name: "",
-      category: "",
-      price: "",
-      stock: "",
-      status: "Active",
-      description: "",
+      photo: "",
+      tag: "",
+      rating: "",
+      reviews: "",
+      ecoFriendly: false,
     })
   }
 
@@ -172,11 +255,11 @@ export default function ProductsPage() {
     setEditingProduct(product)
     setFormData({
       name: product.name,
-      category: product.category,
-      price: product.price.toString(),
-      stock: product.stock.toString(),
-      status: product.status,
-      description: product.description,
+      photo: product.photo,
+      tag: product.tag,
+      rating: product.rating.toString(),
+      reviews: product.reviews.toString(),
+      ecoFriendly: product.ecoFriendly,
     })
     setIsEditDialogOpen(true)
   }
@@ -187,10 +270,17 @@ export default function ProductsPage() {
     setIsViewDialogOpen(true)
   }
 
+  if (loading) {
+    return (
+      <div className="flex flex-1 flex-col items-center justify-center">
+        <Loader2 className="h-8 w-8 animate-spin" />
+        <p className="mt-2 text-muted-foreground">Loading products...</p>
+      </div>
+    )
+  }
+
   return (
     <div className="flex flex-1 flex-col">
-
-      <ProductsHeader />
       <div className="flex flex-1 flex-col gap-6 p-6">
         {/* Header with Search and Create Button */}
         <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
@@ -222,7 +312,7 @@ export default function ProductsPage() {
                 </DialogHeader>
                 <div className="grid gap-4 py-4">
                   <div className="grid gap-2">
-                    <Label htmlFor="name">Product Name</Label>
+                    <Label htmlFor="name">Product Name *</Label>
                     <Input
                       id="name"
                       value={formData.name}
@@ -231,75 +321,70 @@ export default function ProductsPage() {
                     />
                   </div>
                   <div className="grid gap-2">
-                    <Label htmlFor="category">Category</Label>
-                    <Select
-                      value={formData.category}
-                      onValueChange={(value) => setFormData({ ...formData, category: value })}
-                    >
-                      <SelectTrigger>
-                        <SelectValue placeholder="Select category" />
-                      </SelectTrigger>
-                      <SelectContent>
-                        <SelectItem value="Electronics">Electronics</SelectItem>
-                        <SelectItem value="Clothing">Clothing</SelectItem>
-                        <SelectItem value="Books">Books</SelectItem>
-                        <SelectItem value="Home & Garden">Home & Garden</SelectItem>
-                      </SelectContent>
-                    </Select>
+                    <Label htmlFor="photo">Photo URL</Label>
+                    <Input
+                      id="photo"
+                      value={formData.photo}
+                      onChange={(e) => setFormData({ ...formData, photo: e.target.value })}
+                      placeholder="Enter photo URL"
+                    />
+                  </div>
+                  <div className="grid gap-2">
+                    <Label htmlFor="tag">Tag/Category *</Label>
+                    <Input
+                      id="tag"
+                      value={formData.tag}
+                      onChange={(e) => setFormData({ ...formData, tag: e.target.value })}
+                      placeholder="Enter product tag/category"
+                    />
                   </div>
                   <div className="grid grid-cols-2 gap-2">
                     <div className="grid gap-2">
-                      <Label htmlFor="price">Price ($)</Label>
+                      <Label htmlFor="rating">Rating (0-5)</Label>
                       <Input
-                        id="price"
+                        id="rating"
                         type="number"
-                        value={formData.price}
-                        onChange={(e) => setFormData({ ...formData, price: e.target.value })}
+                        min="0"
+                        max="5"
+                        step="0.1"
+                        value={formData.rating}
+                        onChange={(e) => setFormData({ ...formData, rating: e.target.value })}
                         placeholder="0"
                       />
                     </div>
                     <div className="grid gap-2">
-                      <Label htmlFor="stock">Stock</Label>
+                      <Label htmlFor="reviews">Reviews Count</Label>
                       <Input
-                        id="stock"
+                        id="reviews"
                         type="number"
-                        value={formData.stock}
-                        onChange={(e) => setFormData({ ...formData, stock: e.target.value })}
+                        min="0"
+                        value={formData.reviews}
+                        onChange={(e) => setFormData({ ...formData, reviews: e.target.value })}
                         placeholder="0"
                       />
                     </div>
                   </div>
                   <div className="grid gap-2">
-                    <Label htmlFor="status">Status</Label>
-                    <Select
-                      value={formData.status}
-                      onValueChange={(value) => setFormData({ ...formData, status: value })}
-                    >
-                      <SelectTrigger>
-                        <SelectValue />
-                      </SelectTrigger>
-                      <SelectContent>
-                        <SelectItem value="Active">Active</SelectItem>
-                        <SelectItem value="Inactive">Inactive</SelectItem>
-                      </SelectContent>
-                    </Select>
-                  </div>
-                  <div className="grid gap-2">
-                    <Label htmlFor="description">Description</Label>
-                    <Textarea
-                      id="description"
-                      value={formData.description}
-                      onChange={(e) => setFormData({ ...formData, description: e.target.value })}
-                      placeholder="Enter product description"
-                      rows={3}
-                    />
+                    <div className="flex items-center space-x-2">
+                      <input
+                        type="checkbox"
+                        id="ecoFriendly"
+                        checked={formData.ecoFriendly}
+                        onChange={(e) => setFormData({ ...formData, ecoFriendly: e.target.checked })}
+                        className="rounded"
+                      />
+                      <Label htmlFor="ecoFriendly">Eco-Friendly Product</Label>
+                    </div>
                   </div>
                 </div>
                 <DialogFooter>
-                  <Button variant="outline" onClick={() => setIsCreateDialogOpen(false)}>
+                  <Button variant="outline" onClick={() => setIsCreateDialogOpen(false)} disabled={isSubmitting}>
                     Cancel
                   </Button>
-                  <Button onClick={handleCreate}>Create Product</Button>
+                  <Button onClick={handleCreate} disabled={isSubmitting}>
+                    {isSubmitting && <Loader2 className="h-4 w-4 mr-2 animate-spin" />}
+                    Create Product
+                  </Button>
                 </DialogFooter>
               </DialogContent>
             </Dialog>
@@ -319,11 +404,10 @@ export default function ProductsPage() {
               <TableHeader>
                 <TableRow>
                   <TableHead>Product</TableHead>
-                  <TableHead>Category</TableHead>
-                  <TableHead>Price</TableHead>
-                  <TableHead>Stock</TableHead>
-                  <TableHead>Status</TableHead>
+                  <TableHead>Tag/Category</TableHead>
                   <TableHead>Rating</TableHead>
+                  <TableHead>Reviews</TableHead>
+                  <TableHead>Eco-Friendly</TableHead>
                   <TableHead>Actions</TableHead>
                 </TableRow>
               </TableHeader>
@@ -333,33 +417,33 @@ export default function ProductsPage() {
                     <TableCell>
                       <div className="flex items-center gap-3">
                         <img
-                          src={product.image || "/placeholder.svg"}
+                          src={product.photo || "/placeholder.svg"}
                           alt={product.name}
                           className="h-10 w-10 rounded-md object-cover"
                         />
                         <div>
                           <div className="font-medium">{product.name}</div>
-                          <div className="text-sm text-muted-foreground truncate max-w-[200px]">
-                            {product.description}
-                          </div>
                         </div>
                       </div>
                     </TableCell>
                     <TableCell>
-                      <Badge variant="outline">{product.category}</Badge>
-                    </TableCell>
-                    <TableCell>${product.price}</TableCell>
-                    <TableCell>
-                      <Badge variant={product.stock > 0 ? "default" : "destructive"}>{product.stock}</Badge>
-                    </TableCell>
-                    <TableCell>
-                      <Badge variant={product.status === "Active" ? "default" : "secondary"}>{product.status}</Badge>
+                      <Badge variant="outline">{product.tag}</Badge>
                     </TableCell>
                     <TableCell>
                       <div className="flex items-center gap-1">
                         {renderStars(product.rating)}
-                        <span className="text-sm text-muted-foreground ml-1">({product.reviews.length})</span>
+                        <span className="text-sm text-muted-foreground ml-1">
+                          {product.rating.toFixed(1)}
+                        </span>
                       </div>
+                    </TableCell>
+                    <TableCell>
+                      <Badge variant="secondary">{product.reviews}</Badge>
+                    </TableCell>
+                    <TableCell>
+                      <Badge variant={product.ecoFriendly ? "default" : "outline"}>
+                        {product.ecoFriendly ? "Yes" : "No"}
+                      </Badge>
                     </TableCell>
                     <TableCell>
                       <div className="flex items-center gap-2">
@@ -402,7 +486,7 @@ export default function ProductsPage() {
                 <Select
                   value={rowsPerPage.toString()}
                   onValueChange={(value) => {
-                    setRowsPerPage(Number.parseInt(value))
+                    setRowsPerPage(parseInt(value))
                     setCurrentPage(1)
                   }}
                 >
@@ -465,14 +549,13 @@ export default function ProductsPage() {
                     <Package className="h-5 w-5" />
                     {selectedProduct.name}
                   </DialogTitle>
-                  <DialogDescription>Product details and customer reviews</DialogDescription>
+                  <DialogDescription>Product details</DialogDescription>
                 </DialogHeader>
                 <div className="grid gap-6 py-4">
-                  {/* Product Info */}
                   <div className="grid md:grid-cols-2 gap-4">
                     <div>
                       <img
-                        src={selectedProduct.image || "/placeholder.svg"}
+                        src={selectedProduct.photo || "/placeholder.svg"}
                         alt={selectedProduct.name}
                         className="w-full h-48 object-cover rounded-lg"
                       />
@@ -483,19 +566,15 @@ export default function ProductsPage() {
                         <div className="space-y-2 text-sm">
                           <div className="flex items-center gap-2">
                             <Tag className="h-4 w-4" />
-                            <span>Category: {selectedProduct.category}</span>
-                          </div>
-                          <div className="flex items-center gap-2">
-                            <DollarSign className="h-4 w-4" />
-                            <span>Price: ${selectedProduct.price}</span>
+                            <span>Tag: {selectedProduct.tag}</span>
                           </div>
                           <div className="flex items-center gap-2">
                             <Package className="h-4 w-4" />
-                            <span>Stock: {selectedProduct.stock} units</span>
+                            <span>Reviews: {selectedProduct.reviews}</span>
                           </div>
                           <div className="flex items-center gap-2">
-                            <Badge variant={selectedProduct.status === "Active" ? "default" : "secondary"}>
-                              {selectedProduct.status}
+                            <Badge variant={selectedProduct.ecoFriendly ? "default" : "outline"}>
+                              {selectedProduct.ecoFriendly ? "Eco-Friendly" : "Standard"}
                             </Badge>
                           </div>
                         </div>
@@ -505,40 +584,11 @@ export default function ProductsPage() {
                         <div className="flex items-center gap-2">
                           {renderStars(selectedProduct.rating)}
                           <span className="text-sm">
-                            {selectedProduct.rating.toFixed(1)} ({selectedProduct.reviews.length} reviews)
+                            {selectedProduct.rating.toFixed(1)} ({selectedProduct.reviews} reviews)
                           </span>
                         </div>
                       </div>
                     </div>
-                  </div>
-
-                  {/* Description */}
-                  <div>
-                    <h4 className="font-semibold mb-2">Description</h4>
-                    <p className="text-sm text-muted-foreground">{selectedProduct.description}</p>
-                  </div>
-
-                  {/* Reviews */}
-                  <div>
-                    <h4 className="font-semibold mb-4">Customer Reviews</h4>
-                    {selectedProduct.reviews.length > 0 ? (
-                      <div className="space-y-4">
-                        {selectedProduct.reviews.map((review) => (
-                          <div key={review.id} className="border rounded-lg p-4">
-                            <div className="flex items-center justify-between mb-2">
-                              <div className="flex items-center gap-2">
-                                <span className="font-medium">{review.user}</span>
-                                <div className="flex items-center">{renderStars(review.rating)}</div>
-                              </div>
-                              <span className="text-sm text-muted-foreground">{review.date}</span>
-                            </div>
-                            <p className="text-sm">{review.comment}</p>
-                          </div>
-                        ))}
-                      </div>
-                    ) : (
-                      <p className="text-sm text-muted-foreground">No reviews yet.</p>
-                    )}
                   </div>
                 </div>
               </>
@@ -555,7 +605,7 @@ export default function ProductsPage() {
             </DialogHeader>
             <div className="grid gap-4 py-4">
               <div className="grid gap-2">
-                <Label htmlFor="edit-name">Product Name</Label>
+                <Label htmlFor="edit-name">Product Name *</Label>
                 <Input
                   id="edit-name"
                   value={formData.name}
@@ -563,69 +613,66 @@ export default function ProductsPage() {
                 />
               </div>
               <div className="grid gap-2">
-                <Label htmlFor="edit-category">Category</Label>
-                <Select
-                  value={formData.category}
-                  onValueChange={(value) => setFormData({ ...formData, category: value })}
-                >
-                  <SelectTrigger>
-                    <SelectValue />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="Electronics">Electronics</SelectItem>
-                    <SelectItem value="Clothing">Clothing</SelectItem>
-                    <SelectItem value="Books">Books</SelectItem>
-                    <SelectItem value="Home & Garden">Home & Garden</SelectItem>
-                  </SelectContent>
-                </Select>
+                <Label htmlFor="edit-photo">Photo URL</Label>
+                <Input
+                  id="edit-photo"
+                  value={formData.photo}
+                  onChange={(e) => setFormData({ ...formData, photo: e.target.value })}
+                />
+              </div>
+              <div className="grid gap-2">
+                <Label htmlFor="edit-tag">Tag/Category *</Label>
+                <Input
+                  id="edit-tag"
+                  value={formData.tag}
+                  onChange={(e) => setFormData({ ...formData, tag: e.target.value })}
+                />
               </div>
               <div className="grid grid-cols-2 gap-2">
                 <div className="grid gap-2">
-                  <Label htmlFor="edit-price">Price ($)</Label>
+                  <Label htmlFor="edit-rating">Rating (0-5)</Label>
                   <Input
-                    id="edit-price"
+                    id="edit-rating"
                     type="number"
-                    value={formData.price}
-                    onChange={(e) => setFormData({ ...formData, price: e.target.value })}
+                    min="0"
+                    max="5"
+                    step="0.1"
+                    value={formData.rating}
+                    onChange={(e) => setFormData({ ...formData, rating: e.target.value })}
                   />
                 </div>
                 <div className="grid gap-2">
-                  <Label htmlFor="edit-stock">Stock</Label>
+                  <Label htmlFor="edit-reviews">Reviews Count</Label>
                   <Input
-                    id="edit-stock"
+                    id="edit-reviews"
                     type="number"
-                    value={formData.stock}
-                    onChange={(e) => setFormData({ ...formData, stock: e.target.value })}
+                    min="0"
+                    value={formData.reviews}
+                    onChange={(e) => setFormData({ ...formData, reviews: e.target.value })}
                   />
                 </div>
               </div>
               <div className="grid gap-2">
-                <Label htmlFor="edit-status">Status</Label>
-                <Select value={formData.status} onValueChange={(value) => setFormData({ ...formData, status: value })}>
-                  <SelectTrigger>
-                    <SelectValue />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="Active">Active</SelectItem>
-                    <SelectItem value="Inactive">Inactive</SelectItem>
-                  </SelectContent>
-                </Select>
-              </div>
-              <div className="grid gap-2">
-                <Label htmlFor="edit-description">Description</Label>
-                <Textarea
-                  id="edit-description"
-                  value={formData.description}
-                  onChange={(e) => setFormData({ ...formData, description: e.target.value })}
-                  rows={3}
-                />
+                <div className="flex items-center space-x-2">
+                  <input
+                    type="checkbox"
+                    id="edit-ecoFriendly"
+                    checked={formData.ecoFriendly}
+                    onChange={(e) => setFormData({ ...formData, ecoFriendly: e.target.checked })}
+                    className="rounded"
+                  />
+                  <Label htmlFor="edit-ecoFriendly">Eco-Friendly Product</Label>
+                </div>
               </div>
             </div>
             <DialogFooter>
-              <Button variant="outline" onClick={() => setIsEditDialogOpen(false)}>
+              <Button variant="outline" onClick={() => setIsEditDialogOpen(false)} disabled={isSubmitting}>
                 Cancel
               </Button>
-              <Button onClick={handleEdit}>Update Product</Button>
+              <Button onClick={handleEdit} disabled={isSubmitting}>
+                {isSubmitting && <Loader2 className="h-4 w-4 mr-2 animate-spin" />}
+                Update Product
+              </Button>
             </DialogFooter>
           </DialogContent>
         </Dialog>
