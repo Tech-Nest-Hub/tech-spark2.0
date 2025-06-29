@@ -136,10 +136,14 @@ export default function TechspireMarketplace() {
               </a>
 
             </div>
-             
-              <Button className=" hidden md:block bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700">
-                Get Started
-              </Button>
+
+            <Button
+              onClick={() => router.push("/sign-in")}
+              className=" hidden md:block bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700"
+            >
+              {/* //Satkar ko lagi */}
+              Get Started
+            </Button>
 
             {/* Mobile menu button */}
             <div className="md:hidden">
