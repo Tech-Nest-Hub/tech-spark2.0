@@ -1,7 +1,7 @@
-"use client"
+"use client";
 
-import { SidebarTrigger } from "@/components/ui/sidebar"
-import { Separator } from "@/components/ui/separator"
+import { SidebarTrigger } from "@/components/ui/sidebar";
+import { Separator } from "@/components/ui/separator";
 import {
   Breadcrumb,
   BreadcrumbItem,
@@ -9,15 +9,41 @@ import {
   BreadcrumbList,
   BreadcrumbPage,
   BreadcrumbSeparator,
-} from "@/components/ui/breadcrumb"
-import { useEffect, useState } from "react"
-import axios from "axios"
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
-import { Badge } from "@/components/ui/badge"
-import { Button } from "@/components/ui/button"
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
-import { TrendingUp, TrendingDown, Users, DollarSign, ShoppingCart, Activity } from "lucide-react"
+} from "@/components/ui/breadcrumb";
+import { useEffect, useState } from "react";
+import axios from "axios";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import {
+  TrendingUp,
+  TrendingDown,
+  Users,
+  DollarSign,
+  ShoppingCart,
+  Activity,
+} from "lucide-react";
 import {
   PieChart,
   Pie,
@@ -30,41 +56,39 @@ import {
   Tooltip,
   Legend,
   ResponsiveContainer,
-} from "recharts"
-import { PieLabelProps } from "recharts/types/polar/Pie"
-import { barData, pieData, tableData } from "./data"
-
-
+} from "recharts";
+import { PieLabelProps } from "recharts/types/polar/Pie";
+import { barData, pieData, tableData } from "./data";
 
 export default function AdminDashboard() {
-  const [currentPage, setCurrentPage] = useState(1)
-  const [rowsPerPage, setRowsPerPage] = useState(5)
+  const [currentPage, setCurrentPage] = useState(1);
+  const [rowsPerPage, setRowsPerPage] = useState(5);
 
   useEffect(() => {
     async function syncUser() {
       try {
-        const res = await axios.post("/api/sync-user")
+        await axios.post("/api/sync-user?role=ADMIN");
       } catch (error) {
-        console.error("failed to sync")
+        console.error("failed to sync");
       }
     }
-    syncUser()
-  }, [])
+    syncUser();
+  }, []);
 
   // Pagination logic
-  const totalPages = Math.ceil(tableData.length / rowsPerPage)
-  const startIndex = (currentPage - 1) * rowsPerPage
-  const endIndex = startIndex + rowsPerPage
-  const currentData = tableData.slice(startIndex, endIndex)
+  const totalPages = Math.ceil(tableData.length / rowsPerPage);
+  const startIndex = (currentPage - 1) * rowsPerPage;
+  const endIndex = startIndex + rowsPerPage;
+  const currentData = tableData.slice(startIndex, endIndex);
 
   const handlePageChange = (page: number) => {
-    setCurrentPage(page)
-  }
+    setCurrentPage(page);
+  };
 
   const handleRowsPerPageChange = (value: string) => {
-    setRowsPerPage(Number.parseInt(value))
-    setCurrentPage(1)
-  }
+    setRowsPerPage(Number.parseInt(value));
+    setCurrentPage(1);
+  };
 
   return (
     <div className="flex flex-1 flex-col">
@@ -89,7 +113,9 @@ export default function AdminDashboard() {
         <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
           <Card>
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-              <CardTitle className="text-sm font-medium">Total Revenue</CardTitle>
+              <CardTitle className="text-sm font-medium">
+                Total Revenue
+              </CardTitle>
               <DollarSign className="h-4 w-4 text-muted-foreground" />
             </CardHeader>
             <CardContent>
@@ -98,13 +124,17 @@ export default function AdminDashboard() {
                 <TrendingUp className="h-3 w-3 mr-1" />
                 +12.5%
               </div>
-              <p className="text-xs text-muted-foreground mt-1">Trending up this month</p>
+              <p className="text-xs text-muted-foreground mt-1">
+                Trending up this month
+              </p>
             </CardContent>
           </Card>
 
           <Card>
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-              <CardTitle className="text-sm font-medium">New Customers</CardTitle>
+              <CardTitle className="text-sm font-medium">
+                New Customers
+              </CardTitle>
               <Users className="h-4 w-4 text-muted-foreground" />
             </CardHeader>
             <CardContent>
@@ -113,13 +143,17 @@ export default function AdminDashboard() {
                 <TrendingDown className="h-3 w-3 mr-1" />
                 -20%
               </div>
-              <p className="text-xs text-muted-foreground mt-1">Down 20% this period</p>
+              <p className="text-xs text-muted-foreground mt-1">
+                Down 20% this period
+              </p>
             </CardContent>
           </Card>
 
           <Card>
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-              <CardTitle className="text-sm font-medium">Active Accounts</CardTitle>
+              <CardTitle className="text-sm font-medium">
+                Active Accounts
+              </CardTitle>
               <Activity className="h-4 w-4 text-muted-foreground" />
             </CardHeader>
             <CardContent>
@@ -128,7 +162,9 @@ export default function AdminDashboard() {
                 <TrendingUp className="h-3 w-3 mr-1" />
                 +12.5%
               </div>
-              <p className="text-xs text-muted-foreground mt-1">Strong user retention</p>
+              <p className="text-xs text-muted-foreground mt-1">
+                Strong user retention
+              </p>
             </CardContent>
           </Card>
 
@@ -143,7 +179,9 @@ export default function AdminDashboard() {
                 <TrendingUp className="h-3 w-3 mr-1" />
                 +4.5%
               </div>
-              <p className="text-xs text-muted-foreground mt-1">Steady performance increase</p>
+              <p className="text-xs text-muted-foreground mt-1">
+                Steady performance increase
+              </p>
             </CardContent>
           </Card>
         </div>
@@ -154,7 +192,9 @@ export default function AdminDashboard() {
           <Card>
             <CardHeader>
               <CardTitle>Sales by Category</CardTitle>
-              <CardDescription>Distribution of sales across product categories</CardDescription>
+              <CardDescription>
+                Distribution of sales across product categories
+              </CardDescription>
             </CardHeader>
             <CardContent>
               <ResponsiveContainer width="100%" height={300}>
@@ -164,7 +204,9 @@ export default function AdminDashboard() {
                     cx="50%"
                     cy="50%"
                     labelLine={false}
-                    label={({ name, percent }: PieLabelProps) => `${name} ${percent}%`}
+                    label={({ name, percent }: PieLabelProps) =>
+                      `${name} ${percent}%`
+                    }
                     outerRadius={80}
                     fill="#8884d8"
                     dataKey="value"
@@ -183,7 +225,9 @@ export default function AdminDashboard() {
           <Card>
             <CardHeader>
               <CardTitle>Monthly Performance</CardTitle>
-              <CardDescription>Revenue and orders over the last 6 months</CardDescription>
+              <CardDescription>
+                Revenue and orders over the last 6 months
+              </CardDescription>
             </CardHeader>
             <CardContent>
               <ResponsiveContainer width="100%" height={300}>
@@ -205,7 +249,9 @@ export default function AdminDashboard() {
         <Card>
           <CardHeader>
             <CardTitle>Product Management</CardTitle>
-            <CardDescription>Manage your marketplace products and inventory</CardDescription>
+            <CardDescription>
+              Manage your marketplace products and inventory
+            </CardDescription>
           </CardHeader>
           <CardContent>
             <Table>
@@ -222,12 +268,20 @@ export default function AdminDashboard() {
               <TableBody>
                 {currentData.map((item) => (
                   <TableRow key={item.id}>
-                    <TableCell className="font-medium">{item.product}</TableCell>
+                    <TableCell className="font-medium">
+                      {item.product}
+                    </TableCell>
                     <TableCell>
                       <Badge variant="outline">{item.category}</Badge>
                     </TableCell>
                     <TableCell>
-                      <Badge variant={item.status === "Active" ? "default" : "secondary"}>{item.status}</Badge>
+                      <Badge
+                        variant={
+                          item.status === "Active" ? "default" : "secondary"
+                        }
+                      >
+                        {item.status}
+                      </Badge>
                     </TableCell>
                     <TableCell>{item.price}</TableCell>
                     <TableCell>{item.stock}</TableCell>
@@ -241,7 +295,10 @@ export default function AdminDashboard() {
             <div className="flex items-center justify-between space-x-2 py-4">
               <div className="flex items-center space-x-2">
                 <p className="text-sm font-medium">Rows per page</p>
-                <Select value={rowsPerPage.toString()} onValueChange={handleRowsPerPageChange}>
+                <Select
+                  value={rowsPerPage.toString()}
+                  onValueChange={handleRowsPerPageChange}
+                >
                   <SelectTrigger className="h-8 w-[70px]">
                     <SelectValue />
                   </SelectTrigger>
@@ -258,7 +315,12 @@ export default function AdminDashboard() {
                   Page {currentPage} of {totalPages}
                 </p>
                 <div className="flex items-center space-x-2">
-                  <Button variant="outline" size="sm" onClick={() => handlePageChange(1)} disabled={currentPage === 1}>
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={() => handlePageChange(1)}
+                    disabled={currentPage === 1}
+                  >
                     {"<<"}
                   </Button>
                   <Button
@@ -292,5 +354,5 @@ export default function AdminDashboard() {
         </Card>
       </div>
     </div>
-  )
+  );
 }
