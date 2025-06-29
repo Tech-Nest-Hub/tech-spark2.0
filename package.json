@@ -17,6 +17,10 @@
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
     "lucide-react": "^0.525.0",
+<<<<<<< HEAD
+=======
+    "@prisma/client": "^6.10.1",
+>>>>>>> b7dfaaf125ecfbc28167862a70c1d5175c6195b7
     "next": "15.3.4",
     "next-themes": "^0.4.6",
     "react": "^19.0.0",
