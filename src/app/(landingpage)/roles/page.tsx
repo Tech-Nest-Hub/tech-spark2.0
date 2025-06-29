@@ -1,15 +1,13 @@
+import Link from "next/link";
+
 export default function Page() {
-    return(
-        <>
-
-        <div>
-
-        </div>
-        <div>
-            <a href="#">Admin</a>
-            <a href="#">User</a>
-
-        </div>
-        </>
-    )
+  return (
+    <>
+      <div></div>
+      <div>
+        <Link href="/sign-in?role=admin">Admin</Link>
+        <Link href="/sign-in?role=user">User</Link>
+      </div>
+    </>
+  );
 }
