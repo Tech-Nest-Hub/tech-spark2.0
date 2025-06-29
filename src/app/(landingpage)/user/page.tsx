@@ -1,8 +1,8 @@
-"use client"
+"use client";
 
-import { motion } from "framer-motion"
-import { useState, useEffect } from "react"
-import { useRouter } from "next/navigation"
+import { motion } from "framer-motion";
+import { useState, useEffect } from "react";
+import { useRouter } from "next/navigation";
 import {
   Menu,
   X,
@@ -15,52 +15,72 @@ import {
   Zap,
   ArrowRight,
   ChevronLeft,
-} from "lucide-react"
-import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
-import { Card, CardContent } from "@/components/ui/card"
-import { Badge } from "@/components/ui/badge"
-import { categories, FloatingCards, topPicks, trendingProducts } from "./data"
-import Navbar from "./Navbar"
-import Footer from "./Footer"
+} from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Card, CardContent } from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
+import { categories, FloatingCards, topPicks } from "./data";
+import Navbar from "./Navbar";
+import Footer from "./Footer";
+import axios from "axios";
 
 export default function TechspireMarketplace() {
-  const [isMenuOpen, setIsMenuOpen] = useState(false)
-  const [scrollY, setScrollY] = useState(0)
-  const [cardsSpread, setCardsSpread] = useState(false)
-  const [currentSlide, setCurrentSlide] = useState(0)
-  const router = useRouter()
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [scrollY, setScrollY] = useState(0);
+  const [cardsSpread, setCardsSpread] = useState(false);
+  const [currentSlide, setCurrentSlide] = useState(0);
+  const [trendingProducts, setTrendingProducts] = useState<any>([]);
+  const router = useRouter();
 
   useEffect(() => {
-    const handleScroll = () => setScrollY(window.scrollY)
-    window.addEventListener("scroll", handleScroll)
-    return () => window.removeEventListener("scroll", handleScroll)
-  }, [])
+    async function fetchTrendingProducts() {
+      try {
+        const res = await axios.get("/api/products");
+        setTrendingProducts(res.data);
+      } catch (error) {
+        console.error("Failed to fetch trending products:", error);
+      }
+    }
+    fetchTrendingProducts();
+  }, []);
+
+  useEffect(() => {
+    const handleScroll = () => setScrollY(window.scrollY);
+    window.addEventListener("scroll", handleScroll);
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
 
   useEffect(() => {
     const timer = setTimeout(() => {
-      setCardsSpread(true)
-    }, 2000)
-    return () => clearTimeout(timer)
-  }, [])
+      setCardsSpread(true);
+    }, 2000);
+    return () => clearTimeout(timer);
+  }, []);
 
   // Auto-slide for trending carousel
   useEffect(() => {
     const timer = setInterval(() => {
-      setCurrentSlide((prev) => (prev + 1) % Math.ceil(trendingProducts.length / 3))
-    }, 4000)
-    return () => clearInterval(timer)
-  }, [])
+      setCurrentSlide(
+        (prev) => (prev + 1) % Math.ceil(trendingProducts.length / 3)
+      );
+    }, 4000);
+    return () => clearInterval(timer);
+  }, []);
 
   const nextSlide = () => {
-    setCurrentSlide((prev) => (prev + 1) % Math.ceil(trendingProducts.length / 3))
-  }
+    setCurrentSlide(
+      (prev) => (prev + 1) % Math.ceil(trendingProducts.length / 3)
+    );
+  };
 
   const prevSlide = () => {
     setCurrentSlide(
-      (prev) => (prev - 1 + Math.ceil(trendingProducts.length / 3)) % Math.ceil(trendingProducts.length / 3),
-    )
-  }
+      (prev) =>
+        (prev - 1 + Math.ceil(trendingProducts.length / 3)) %
+        Math.ceil(trendingProducts.length / 3)
+    );
+  };
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 to-blue-50">
@@ -68,7 +88,10 @@ export default function TechspireMarketplace() {
       <Navbar />
 
       {/* Hero Section */}
-      <section id="home" className="pt-24 pb-16 px-4 sm:px-6 lg:px-8 overflow-hidden">
+      <section
+        id="home"
+        className="pt-24 pb-16 px-4 sm:px-6 lg:px-8 overflow-hidden"
+      >
         <div className="max-w-7xl mx-auto">
           <div className="text-center">
             <motion.h1
@@ -82,7 +105,9 @@ export default function TechspireMarketplace() {
                 Techspire Marketplace
               </span>
               <br />
-              <span className="text-3xl sm:text-4xl lg:text-5xl">Empowering Campus Commerce</span>
+              <span className="text-3xl sm:text-4xl lg:text-5xl">
+                Empowering Campus Commerce
+              </span>
             </motion.h1>
 
             <motion.p
@@ -91,7 +116,8 @@ export default function TechspireMarketplace() {
               transition={{ duration: 0.8, delay: 0.2 }}
               className="text-xl text-gray-600 mb-8 max-w-3xl mx-auto"
             >
-              A digital platform for college startups to connect, showcase, and grow within a thriving campus ecosystem.
+              A digital platform for college startups to connect, showcase, and
+              grow within a thriving campus ecosystem.
             </motion.p>
 
             <motion.div
@@ -115,8 +141,8 @@ export default function TechspireMarketplace() {
               </div>
             </motion.div>
 
-           {/* Floating Cards Animation */}
-           <div className=" hidden relative h-96 md:flex items-center justify-center">
+            {/* Floating Cards Animation */}
+            <div className=" hidden relative h-96 md:flex items-center justify-center">
               {FloatingCards.map((card) => (
                 <motion.div
                   key={card.id}
@@ -175,7 +201,8 @@ export default function TechspireMarketplace() {
               transition={{ duration: 0.8, delay: 1.5 }}
               className="text-gray-600 mt-8"
             >
-              Startups can showcase their innovations, and students can discover amazing products and services.
+              Startups can showcase their innovations, and students can discover
+              amazing products and services.
             </motion.p>
           </div>
         </div>
@@ -192,10 +219,13 @@ export default function TechspireMarketplace() {
           >
             <div className="flex items-center justify-center gap-2 mb-4">
               <TrendingUp className="w-6 h-6 text-blue-600" />
-              <h2 className="text-3xl sm:text-4xl font-bold text-gray-900">Trending Now</h2>
+              <h2 className="text-3xl sm:text-4xl font-bold text-gray-900">
+                Trending Now
+              </h2>
             </div>
             <p className="text-gray-600 max-w-2xl mx-auto">
-              Discover the hottest products from campus startups that everyone's talking about
+              Discover the hottest products from campus startups that everyone's
+              talking about
             </p>
           </motion.div>
 
@@ -206,69 +236,92 @@ export default function TechspireMarketplace() {
                 className="flex transition-transform duration-500 ease-in-out"
                 style={{ transform: `translateX(-${currentSlide * 100}%)` }}
               >
-                {Array.from({ length: Math.ceil(trendingProducts.length / 3) }).map((_, slideIndex) => (
+                {Array.from({
+                  length: Math.ceil(trendingProducts.length / 3),
+                }).map((_, slideIndex) => (
                   <div key={slideIndex} className="w-full flex-shrink-0">
                     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                      {trendingProducts.slice(slideIndex * 3, slideIndex * 3 + 3).map((product, index) => (
-                        <motion.div
-                          key={product.id}
-                          initial={{ opacity: 0, y: 20 }}
-                          whileInView={{ opacity: 1, y: 0 }}
-                          transition={{ duration: 0.5, delay: index * 0.1 }}
-                          whileHover={{ y: -5 }}
-                          className="group"
-                        >
-                          <Card className="overflow-hidden border-0 shadow-lg hover:shadow-xl transition-all duration-300">
-                            <div className="relative">
-                              <img
-                                src={product.image || "/placeholder.svg"}
-                                alt={product.name}
-                                className="w-full h-48 object-cover group-hover:scale-105 transition-transform duration-300"
-                              />
-                              <Badge
-                                className={`absolute top-3 left-3 ${product.badge === "Trending"
-                                    ? "bg-red-500"
-                                    : product.badge === "Hot"
+                      {trendingProducts
+                        .slice(slideIndex * 3, slideIndex * 3 + 3)
+                        .map((product: any, index: any) => (
+                          <motion.div
+                            key={product.id}
+                            initial={{ opacity: 0, y: 20 }}
+                            whileInView={{ opacity: 1, y: 0 }}
+                            transition={{ duration: 0.5, delay: index * 0.1 }}
+                            whileHover={{ y: -5 }}
+                            className="group"
+                          >
+                            <Card className="overflow-hidden border-0 shadow-lg hover:shadow-xl transition-all duration-300">
+                              <div className="relative">
+                                <img
+                                  src={product.photo || "/placeholder.svg"}
+                                  alt={product.name}
+                                  className="w-full h-48 object-cover group-hover:scale-105 transition-transform duration-300"
+                                />
+                                <Badge
+                                  className={`absolute top-3 left-3 ${
+                                    product.badge === "Trending"
+                                      ? "bg-red-500"
+                                      : product.badge === "Hot"
                                       ? "bg-orange-500"
                                       : product.badge === "New"
-                                        ? "bg-green-500"
-                                        : product.badge === "Popular"
-                                          ? "bg-blue-500"
-                                          : "bg-purple-500"
+                                      ? "bg-green-500"
+                                      : product.badge === "Popular"
+                                      ? "bg-blue-500"
+                                      : "bg-purple-500"
                                   }`}
-                              >
-                                {product.badge}
-                              </Badge>
-                              <Button
-                                size="icon"
-                                variant="ghost"
-                                className="absolute top-3 right-3 bg-white/80 hover:bg-white"
-                              >
-                                <Heart className="w-4 h-4" />
-                              </Button>
-                            </div>
-                            <CardContent className="p-4">
-                              <div className="flex items-center gap-1 mb-2">
-                                <Star className="w-4 h-4 fill-yellow-400 text-yellow-400" />
-                                <span className="text-sm font-medium">{product.rating}</span>
-                                <span className="text-sm text-gray-500">({product.reviews})</span>
-                              </div>
-                              <h3 className="font-semibold text-gray-900 mb-1">{product.name}</h3>
-                              <p className="text-sm text-gray-600 mb-3">by {product.startup}</p>
-                              <div className="flex items-center justify-between">
-                                <div className="flex items-center gap-2">
-                                  <span className="text-lg font-bold text-gray-900">{product.price}</span>
-                                  <span className="text-sm text-gray-500 line-through">{product.originalPrice}</span>
-                                </div>
-                                <Button size="sm" className="bg-gradient-to-r from-blue-600 to-purple-600">
-                                  <ShoppingCart className="w-4 h-4 mr-1" />
-                                  Add
+                                >
+                                  {product.badge}
+                                </Badge>
+                                <Button
+                                  size="icon"
+                                  variant="ghost"
+                                  className="absolute top-3 right-3 bg-white/80 hover:bg-white"
+                                >
+                                  <Heart className="w-4 h-4" />
                                 </Button>
                               </div>
-                            </CardContent>
-                          </Card>
-                        </motion.div>
-                      ))}
+                              <CardContent className="p-4">
+                                <div className="flex items-center gap-1 mb-2">
+                                  <Star className="w-4 h-4 fill-yellow-400 text-yellow-400" />
+                                  <span className="text-sm font-medium">
+                                    {product.rating}
+                                  </span>
+                                  <span className="text-sm text-gray-500">
+                                    ({product.reviews})
+                                  </span>
+                                </div>
+                                <h3 className="font-semibold text-gray-900 mb-1">
+                                  {product.name}
+                                </h3>
+                                <p className="text-sm text-gray-600 mb-3">
+                                  by {product.startup}
+                                </p>
+                                <div className="flex items-center justify-between">
+                                  <div className="flex items-center gap-2">
+                                    <span className="text-lg font-bold text-gray-900">
+                                      {product.price}
+                                    </span>
+                                    <span className="text-sm text-gray-500 line-through">
+                                      {product.originalPrice}
+                                    </span>
+                                  </div>
+                                  <Button
+                                    size="sm"
+                                    onClick={() =>
+                                      router.push(`/products/${product.id}`)
+                                    }
+                                    className="bg-gradient-to-r from-blue-600 to-purple-600"
+                                  >
+                                    <ShoppingCart className="w-4 h-4 mr-1" />
+                                    Add
+                                  </Button>
+                                </div>
+                              </CardContent>
+                            </Card>
+                          </motion.div>
+                        ))}
                     </div>
                   </div>
                 ))}
@@ -295,11 +348,14 @@ export default function TechspireMarketplace() {
 
             {/* Carousel Indicators */}
             <div className="flex justify-center mt-6 gap-2">
-              {Array.from({ length: Math.ceil(trendingProducts.length / 3) }).map((_, index) => (
+              {Array.from({
+                length: Math.ceil(trendingProducts.length / 3),
+              }).map((_, index) => (
                 <button
                   key={index}
-                  className={`w-2 h-2 rounded-full transition-colors ${index === currentSlide ? "bg-blue-600" : "bg-gray-300"
-                    }`}
+                  className={`w-2 h-2 rounded-full transition-colors ${
+                    index === currentSlide ? "bg-blue-600" : "bg-gray-300"
+                  }`}
                   onClick={() => setCurrentSlide(index)}
                 />
               ))}
@@ -319,10 +375,13 @@ export default function TechspireMarketplace() {
           >
             <div className="flex items-center justify-center gap-2 mb-4">
               <Zap className="w-6 h-6 text-purple-600" />
-              <h2 className="text-3xl sm:text-4xl font-bold text-gray-900">Top Picks</h2>
+              <h2 className="text-3xl sm:text-4xl font-bold text-gray-900">
+                Top Picks
+              </h2>
             </div>
             <p className="text-gray-600 max-w-2xl mx-auto">
-              Hand-selected premium products that deliver exceptional value for students
+              Hand-selected premium products that deliver exceptional value for
+              students
             </p>
           </motion.div>
 
@@ -355,14 +414,26 @@ export default function TechspireMarketplace() {
                   <CardContent className="p-6">
                     <div className="flex items-center gap-1 mb-2">
                       <Star className="w-4 h-4 fill-yellow-400 text-yellow-400" />
-                      <span className="text-sm font-medium">{product.rating}</span>
-                      <span className="text-sm text-gray-500">({product.reviews})</span>
+                      <span className="text-sm font-medium">
+                        {product.rating}
+                      </span>
+                      <span className="text-sm text-gray-500">
+                        ({product.reviews})
+                      </span>
                     </div>
-                    <h3 className="font-bold text-gray-900 mb-1 text-lg">{product.name}</h3>
-                    <p className="text-sm text-gray-600 mb-2">by {product.startup}</p>
-                    <p className="text-sm text-gray-600 mb-4">{product.description}</p>
+                    <h3 className="font-bold text-gray-900 mb-1 text-lg">
+                      {product.name}
+                    </h3>
+                    <p className="text-sm text-gray-600 mb-2">
+                      by {product.startup}
+                    </p>
+                    <p className="text-sm text-gray-600 mb-4">
+                      {product.description}
+                    </p>
                     <div className="flex items-center justify-between">
-                      <span className="text-xl font-bold text-gray-900">{product.price}</span>
+                      <span className="text-xl font-bold text-gray-900">
+                        {product.price}
+                      </span>
                       <Button className="bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-700 hover:to-blue-700">
                         <ShoppingCart className="w-4 h-4 mr-2" />
                         Buy Now
@@ -376,7 +447,6 @@ export default function TechspireMarketplace() {
         </div>
       </section>
 
-
       {/* Categories Section */}
       <section id="categories" className="py-16 px-4 sm:px-6 lg:px-8 bg-white">
         <div className="max-w-7xl mx-auto">
@@ -386,7 +456,9 @@ export default function TechspireMarketplace() {
             transition={{ duration: 0.6 }}
             className="text-center mb-12"
           >
-            <h2 className="text-3xl sm:text-4xl font-bold text-gray-900 mb-4">Shop by Category</h2>
+            <h2 className="text-3xl sm:text-4xl font-bold text-gray-900 mb-4">
+              Shop by Category
+            </h2>
             <p className="text-gray-600 max-w-2xl mx-auto">
               Explore our diverse range of products across different categories
             </p>
@@ -409,8 +481,12 @@ export default function TechspireMarketplace() {
                     >
                       <category.icon className="w-8 h-8 text-white" />
                     </div>
-                    <h3 className="font-semibold text-gray-900 mb-1">{category.name}</h3>
-                    <p className="text-sm text-gray-600">{category.count} products</p>
+                    <h3 className="font-semibold text-gray-900 mb-1">
+                      {category.name}
+                    </h3>
+                    <p className="text-sm text-gray-600">
+                      {category.count} products
+                    </p>
                   </CardContent>
                 </Card>
               </motion.div>
@@ -434,5 +510,5 @@ export default function TechspireMarketplace() {
         <Footer />
       </section>
     </div>
-  )
+  );
 }
