@@ -39,7 +39,7 @@ const Navbar = () => {
 
                     </div>
 
-                    <Button onClick={() => router.push('/roles')} className=" hidden md:block bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700">
+                    <Button onClick={() => router.push('/roles')} className="hidden md:block bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700">
                         Get Started
                     </Button>
 

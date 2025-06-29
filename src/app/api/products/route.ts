@@ -5,9 +5,10 @@ import { NextRequest, NextResponse } from "next/server";
 export async function POST(req: Request) {
   try {
     const body = await req.json();
-
+    console.log("POST /products body:", body);
     const product = await prisma.product.create({
       data: {
+        amount: body.amount,
         name: body.name,
         photo: body.photo,
         tag: body.tag,

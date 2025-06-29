@@ -39,13 +39,14 @@
     "recharts": "^3.0.2",
     "sonner": "^2.0.5",
     "tailwind-merge": "^3.3.1",
-    "three": "^0.177.0"
+    "xml2js": "^0.6.2"
   },
   "devDependencies": {
     "@tailwindcss/postcss": "^4.1.11",
     "@types/node": "^20",
     "@types/react": "^19",
     "@types/react-dom": "^19",
+    "@types/xml2js": "^0.4.14",
     "prisma": "^6.10.1",
     "tailwindcss": "^4.1.11",
     "typescript": "^5"

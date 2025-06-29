@@ -19,14 +19,35 @@ enum Role {
   ADMIN
 }
 
+enum OrderStatus {
+  PENDING
+  PAID
+  FAILED
+}
+
 model User {
   id        String   @id @default(uuid())
   username  String
   clerkId   String   @unique
   email     String   @unique
+  orders    Order[]
   role      Role     @default(USER)
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+}
+
+model Order {
+  id        String      @id @default(uuid())
+  // productId String
+  userId    String
+  amount    Int
+  status    OrderStatus @default(PENDING)
+  createdAt DateTime    @default(now())
+
+  // product Product @relation(fields: [productId], references: [id])
+  user      User     @relation(fields: [userId], references: [id])
+  Product   Product? @relation(fields: [productId], references: [id])
+  productId String?
 }
 
 model Product {
@@ -37,4 +58,6 @@ model Product {
   rating      Int?
   reviews     String?
   ecoFriendly Boolean @default(false)
+  amount      Float?
+  Order       Order[]
 }
