@@ -1,5 +1,6 @@
-import { SidebarTrigger } from "@/components/ui/sidebar"
-import { Separator } from "@/components/ui/separator"
+"use client";
+import { SidebarTrigger } from "@/components/ui/sidebar";
+import { Separator } from "@/components/ui/separator";
 import {
   Breadcrumb,
   BreadcrumbItem,
@@ -7,9 +8,22 @@ import {
   BreadcrumbList,
   BreadcrumbPage,
   BreadcrumbSeparator,
-} from "@/components/ui/breadcrumb"
+} from "@/components/ui/breadcrumb";
+import { useEffect } from "react";
+import axios from "axios";
 
 export default function AdminDashboard() {
+  useEffect(() => {
+    async function syncUser() {
+      try {
+        const res = await axios.post("/api/sync-user");
+      } catch (error) {
+        console.error("failed to sync");
+      }
+    }
+
+    syncUser();
+  }, []);
   return (
     <div className="flex flex-1 flex-col">
       <header className="flex h-16 shrink-0 items-center gap-2 border-b px-4">
@@ -35,13 +49,16 @@ export default function AdminDashboard() {
         </div>
         <div className="min-h-[100vh] flex-1 rounded-xl bg-muted/50 md:min-h-min p-8">
           <div className="flex flex-col items-center justify-center h-full min-h-[400px]">
-            <h1 className="text-4xl font-bold text-center mb-4">Welcome to the Admin Dashboard</h1>
+            <h1 className="text-4xl font-bold text-center mb-4">
+              Welcome to the Admin Dashboard
+            </h1>
             <p className="text-lg text-muted-foreground text-center max-w-2xl">
-              Manage your application settings, user profiles, and system configuration from this central dashboard.
+              Manage your application settings, user profiles, and system
+              configuration from this central dashboard.
             </p>
           </div>
         </div>
       </div>
     </div>
-  )
+  );
 }
