@@ -22,6 +22,7 @@ import { Card, CardContent } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import { categories, FloatingCards, topPicks, trendingProducts } from "./data"
 import Navbar from "./Navbar"
+import Footer from "./Footer"
 
 export default function TechspireMarketplace() {
   const [isMenuOpen, setIsMenuOpen] = useState(false)
@@ -64,7 +65,7 @@ export default function TechspireMarketplace() {
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 to-blue-50">
       {/* Navigation */}
-     <Navbar/>
+      <Navbar />
 
       {/* Hero Section */}
       <section id="home" className="pt-24 pb-16 px-4 sm:px-6 lg:px-8 overflow-hidden">
@@ -114,8 +115,8 @@ export default function TechspireMarketplace() {
               </div>
             </motion.div>
 
-            {/* Enhanced Floating Cards Animation */}
-            <div className="hidden relative h-96 md:flex items-center justify-center">
+           {/* Floating Cards Animation */}
+           <div className=" hidden relative h-96 md:flex items-center justify-center">
               {FloatingCards.map((card) => (
                 <motion.div
                   key={card.id}
@@ -140,20 +141,20 @@ export default function TechspireMarketplace() {
                     stiffness: cardsSpread ? 120 : 100,
                   }}
                   whileHover={{
-                    scale: 1.1,
+                    scale: 1.05,
                     rotate: card.rotation + 5,
                     transition: { duration: 0.2 },
                   }}
-                  className="absolute w-32 h-20 sm:w-40 sm:h-24 rounded-xl shadow-xl cursor-pointer backdrop-blur-sm"
+                  className="absolute w-32 h-20 sm:w-40 sm:h-24 rounded-lg shadow-lg cursor-pointer"
                   style={{
                     background: `linear-gradient(135deg, ${
                       card.id % 2 === 0
-                        ? "rgba(59, 130, 246, 0.9), rgba(147, 51, 234, 0.9)"
-                        : "rgba(16, 185, 129, 0.9), rgba(6, 182, 212, 0.9)"
+                        ? "rgb(59, 130, 246), rgb(147, 51, 234)"
+                        : "rgb(16, 185, 129), rgb(6, 182, 212)"
                     })`,
                   }}
                 >
-                  <div className="w-full h-full rounded-xl bg-white/20 backdrop-blur-sm flex items-center justify-center border border-white/30">
+                  <div className="w-full h-full rounded-lg bg-white/20 backdrop-blur-sm flex items-center justify-center">
                     <div className="text-white font-semibold text-xs sm:text-sm text-center px-2">
                       {card.id === 1 && "Startup Portal"}
                       {card.id === 2 && "Student Market"}
@@ -225,8 +226,7 @@ export default function TechspireMarketplace() {
                                 className="w-full h-48 object-cover group-hover:scale-105 transition-transform duration-300"
                               />
                               <Badge
-                                className={`absolute top-3 left-3 ${
-                                  product.badge === "Trending"
+                                className={`absolute top-3 left-3 ${product.badge === "Trending"
                                     ? "bg-red-500"
                                     : product.badge === "Hot"
                                       ? "bg-orange-500"
@@ -235,7 +235,7 @@ export default function TechspireMarketplace() {
                                         : product.badge === "Popular"
                                           ? "bg-blue-500"
                                           : "bg-purple-500"
-                                }`}
+                                  }`}
                               >
                                 {product.badge}
                               </Badge>
@@ -298,9 +298,8 @@ export default function TechspireMarketplace() {
               {Array.from({ length: Math.ceil(trendingProducts.length / 3) }).map((_, index) => (
                 <button
                   key={index}
-                  className={`w-2 h-2 rounded-full transition-colors ${
-                    index === currentSlide ? "bg-blue-600" : "bg-gray-300"
-                  }`}
+                  className={`w-2 h-2 rounded-full transition-colors ${index === currentSlide ? "bg-blue-600" : "bg-gray-300"
+                    }`}
                   onClick={() => setCurrentSlide(index)}
                 />
               ))}
@@ -430,6 +429,9 @@ export default function TechspireMarketplace() {
             </Button>
           </motion.div>
         </div>
+      </section>
+      <section>
+        <Footer />
       </section>
     </div>
   )

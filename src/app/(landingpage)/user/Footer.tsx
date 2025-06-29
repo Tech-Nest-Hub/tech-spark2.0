@@ -1,5 +1,6 @@
 import React from 'react'
-
+import logo from '@/components/ui/technest.jpg'
+import Image from 'next/image'
 const Footer = () => {
   return (
     <div>
@@ -10,7 +11,7 @@ const Footer = () => {
             <div className="col-span-1 md:col-span-2">
               <div className="flex items-center space-x-2 mb-4">
                 <div className="w-8 h-8 bg-gradient-to-r from-blue-600 to-purple-600 rounded-lg flex items-center justify-center">
-                  <span className="text-white font-bold text-sm">T</span>
+                  <span className="text-white font-bold text-sm"><Image src={logo} alt="logo" width={30} height={30}/></span>
                 </div>
                 <span className="text-xl font-bold">Techspire Marketplace</span>
               </div>
@@ -44,19 +45,19 @@ const Footer = () => {
                 </li>
                 <li>
                   <a
-                    href="#features"
+                    href="/trending"
                     className="text-gray-400 hover:text-white transition-colors"
                   >
-                    Features
+                    Trending
                   </a>
                 </li>
                 
                 <li>
                   <a
-                    href="#about"
+                    href="/products"
                     className="text-gray-400 hover:text-white transition-colors"
                   >
-                    About
+                    Products
                   </a>
                 </li>
               </ul>

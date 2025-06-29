@@ -1,19 +1,77 @@
-import { Shirt,  Smartphone,
+import {
+  Shirt, Smartphone,
   Book,
   Coffee,
   Gamepad2,
-  Headphones, } from "lucide-react"
+  Headphones,
+} from "lucide-react"
 
 // Mock data
 export const FloatingCards = [
-  { id: 1, rotation: -15, finalX: -200, finalY: -100, centerX: 0, centerY: 0, delay: 0.1 },
-  { id: 2, rotation: 10, finalX: 150, finalY: -120, centerX: 0, centerY: 0, delay: 0.2 },
-  { id: 3, rotation: -8, finalX: -180, finalY: 80, centerX: 0, centerY: 0, delay: 0.3 },
-  { id: 4, rotation: 12, finalX: 180, finalY: 60, centerX: 0, centerY: 0, delay: 0.4 },
-  { id: 5, rotation: -20, finalX: 0, finalY: -150, centerX: 0, centerY: 0, delay: 0.5 },
-  { id: 6, rotation: 15, finalX: -100, finalY: 120, centerX: 0, centerY: 0, delay: 0.6 },
-  { id: 7, rotation: -5, finalX: 120, finalY: 130, centerX: 0, centerY: 0, delay: 0.7 },
-]
+  {
+    id: 1,
+    rotation: -15,
+    centerX: 0,
+    centerY: 0,
+    finalX: -300,
+    finalY: 0,
+    delay: 0,
+  },
+  {
+    id: 2,
+    rotation: 10,
+    centerX: 0,
+    centerY: 0,
+    finalX: -160,
+    finalY: -20,
+    delay: 0.2,
+  },
+  {
+    id: 3,
+    rotation: -8,
+    centerX: 0,
+    centerY: 0,
+    finalX: -60,
+    finalY: 15,
+    delay: 0.4,
+  },
+  {
+    id: 4,
+    rotation: 12,
+    centerX: 0,
+    centerY: 0,
+    finalX: 0,
+    finalY: -10,
+    delay: 0.6,
+  },
+  {
+    id: 5,
+    rotation: -20,
+    centerX: 0,
+    centerY: 0,
+    finalX: 100,
+    finalY: 20,
+    delay: 0.8,
+  },
+  {
+    id: 6,
+    rotation: 15,
+    centerX: 0,
+    centerY: 0,
+    finalX: 220,
+    finalY: -15,
+    delay: 1.0,
+  },
+  {
+    id: 7,
+    rotation: -5,
+    centerX: 0,
+    centerY: 0,
+    finalX: 350,
+    finalY: 5,
+    delay: 1.2,
+  },
+];
 
 export const trendingProducts = [
   {
