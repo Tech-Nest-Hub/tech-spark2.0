@@ -78,10 +78,10 @@ const Navbar = () => {
                 whileHover={{ rotate: 5 }}
                 transition={{ type: "spring", stiffness: 300 }}
               >
-                <span className="text-white font-bold text-lg"><Image src={logo} alt={""}/></span>
+                <span className="text-white font-bold text-lg"><Image src={logo} alt={""} className="rounded-md"/></span>
               </motion.div>
               <span className="text-xl font-bold bg-gradient-to-r from-gray-900 to-gray-700 bg-clip-text text-transparent">
-                Techspire
+                TechNest
               </span>
             </motion.div>
 

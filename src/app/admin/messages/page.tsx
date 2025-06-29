@@ -82,7 +82,7 @@ const mockMessages = {
     {
       id: 1,
       sender: "Alex Chen",
-      message: "Hi! I saw your startup showcase on Techspire. Really impressive work! 🚀",
+      message: "Hi! I saw your startup showcase on TechNest. Really impressive work! 🚀",
       timestamp: "10:30 AM",
       isOwn: false,
       status: "read",

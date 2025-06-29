@@ -100,9 +100,9 @@ export default function TechspireMarketplace() {
               transition={{ duration: 0.8 }}
               className="text-4xl sm:text-5xl lg:text-6xl font-bold text-gray-900 mb-6"
             >
-              Build{" "}
+              {" "}
               <span className="bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
-                Techspire Marketplace
+                TechNest Marketplace
               </span>
               <br />
               <span className="text-3xl sm:text-4xl lg:text-5xl">
@@ -126,7 +126,7 @@ export default function TechspireMarketplace() {
               transition={{ duration: 0.8, delay: 0.4 }}
               className="flex flex-col sm:flex-row gap-2 justify-center mb-16 max-w-md mx-auto"
             >
-              <div className="relative flex-1">
+              <div className="relative  flex-1">
                 <Input
                   type="text"
                   placeholder="Search for products or startups..."
@@ -134,7 +134,8 @@ export default function TechspireMarketplace() {
                 />
                 <Button
                   size="icon"
-                  className="absolute right-1 top-1 bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700"
+                  onClick={() => router.push("/products")}
+                  className="rounded-full w-8 h-8 top-[2px] absolute right-1  bg-white text-slate-900 border hover:bg-gradient-to-r hover:from-blue-700 hover:to-purple-700 hover:text-white"
                 >
                   <Search className="w-4 h-4" />
                 </Button>
