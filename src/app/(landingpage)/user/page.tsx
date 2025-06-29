@@ -19,13 +19,12 @@ import {
 import Navbar from "./Navbar";
 import { motion } from "framer-motion";
 import { Button } from "@/components/ui/button";
+import axios from "axios";
 
 export default function TechspireMarketplace() {
-
   const router = useRouter();
-  const [scrollY, setScrollY] = useState(0)
-  const [cardsSpread, setCardsSpread] = useState(false)
-
+  const [scrollY, setScrollY] = useState(0);
+  const [cardsSpread, setCardsSpread] = useState(false);
 
   useEffect(() => {
     const handleScroll = () => setScrollY(window.scrollY);
@@ -190,8 +189,8 @@ export default function TechspireMarketplace() {
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 to-blue-50">
       {/* Navigation */}
-     
-      <Navbar/>
+
+      <Navbar />
 
       {/* Hero Section */}
       <section
