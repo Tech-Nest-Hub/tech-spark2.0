@@ -21,10 +21,10 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
 
     const { searchParams } = new URL(req.url);
     const role = searchParams.get("role");
-
+    console.log("Role: ", role);
     const clerk = await clerkClient();
     const clerkUser = await clerk.users.getUser(userId);
-
+    console.log("Clerk User: ", clerkUser);
     const email = clerkUser.emailAddresses[0]?.emailAddress;
 
     const username = [clerkUser.firstName, clerkUser.lastName]
@@ -36,9 +36,11 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
         clerkId: userId,
         email,
         username,
-        role: role ? Role.ADMIN : Role.USER,
+        role: role === Role.ADMIN ? Role.ADMIN : Role.USER,
       },
     });
+
+    console.log("New user created: ", newUser);
 
     return NextResponse.json({ user: newUser });
   } catch (error) {
