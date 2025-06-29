@@ -6,6 +6,7 @@ import { track, feature } from "@/data/datacenter";
 import { ArrowRight, Menu, X, ChevronRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useRouter } from "next/navigation";
+import axios from "axios";
 
 export default function TechspireMarketplace() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -22,6 +23,17 @@ export default function TechspireMarketplace() {
   const tracks = track;
 
   const features = feature;
+
+  useEffect(() => {
+    async function syncUser() {
+      try {
+        await axios.post("/api/sync-user?role=USER");
+      } catch (error) {
+        console.log("failed to sync");
+      }
+    }
+    syncUser();
+  }, []);
 
   //   const floatingCards = [
   //     { id: 1, rotation: -15, x: 10, y: 10, delay: 0 },

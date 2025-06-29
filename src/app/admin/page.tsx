@@ -69,7 +69,7 @@ export default function AdminDashboard() {
       try {
         await axios.post("/api/sync-user?role=ADMIN");
       } catch (error) {
-        console.error("failed to sync");
+        console.log("failed to sync");
       }
     }
     syncUser();
