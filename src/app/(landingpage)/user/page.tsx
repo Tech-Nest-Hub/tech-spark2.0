@@ -18,7 +18,10 @@ import {
   ChevronRight,
   Sparkles,
   Search,
-} from "lucide-react"
+} from "lucide-react";
+
+import axios from "axios";
+import { useClerk, useUser } from "@clerk/nextjs";
 
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input";
@@ -29,6 +32,7 @@ export default function TechspireMarketplace() {
   const [scrollY, setScrollY] = useState(0);
   const [cardsSpread, setCardsSpread] = useState(false);
   const router = useRouter();
+  const { user } = useUser();
 
   useEffect(() => {
     const handleScroll = () => setScrollY(window.scrollY);
@@ -172,6 +176,24 @@ export default function TechspireMarketplace() {
     },
   ];
 
+  useEffect(() => {
+    async function syncUser() {
+      try {
+        await axios.post("/api/sync-user?role=USER");
+      } catch (error) {
+        console.log("failed to sync");
+      }
+    }
+    syncUser();
+  }, []);
+
+  const { signOut } = useClerk();
+
+  const handleLogout = async () => {
+    await signOut();
+    router.push("/");
+  };
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 to-blue-50">
       {/* Navigation */}
@@ -211,13 +233,21 @@ export default function TechspireMarketplace() {
                 Pages
               </a>
             </div>
-
-            <Button
-              onClick={() => router.push("/roles")}
-              className=" hidden md:block bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700"
-            >
-              Get Started
-            </Button>
+            {user ? (
+              <Button
+                onClick={() => handleLogout()}
+                className=" hidden md:block bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700"
+              >
+                Log out
+              </Button>
+            ) : (
+              <Button
+                onClick={() => router.push("/roles")}
+                className=" hidden md:block bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700"
+              >
+                Get Started
+              </Button>
+            )}
 
             {/* Mobile menu button */}
             <div className="md:hidden">
