@@ -39,12 +39,13 @@ export function CheckoutSidebar({
   onQuantityChange,
 }: CheckoutSidebarProps) {
   const [shippingMethod, setShippingMethod] = useState("standard");
-
+  console.log("CheckoutSidebar product:", product);
   const subtotal = product.price * quantity;
   const shipping = shippingMethod === "express" ? 15.99 : 5.99;
   const tax = subtotal * 0.08;
   const total = subtotal + shipping + tax;
   const handleEsewaPay = async (productId: string) => {
+    console.log("Initiating eSewa payment for product ID:", productId);
     const res = await fetch("/api/esewa/initiate", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
@@ -202,7 +203,7 @@ export function CheckoutSidebar({
 
         {/* Checkout Button */}
         <Button
-          onClick={() => handleEsewaPay("1")}
+          onClick={() => handleEsewaPay(product.id.toString())}
           className="w-full"
           size="lg"
         >

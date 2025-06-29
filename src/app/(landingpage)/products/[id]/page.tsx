@@ -21,60 +21,17 @@ import { Separator } from "@/components/ui/separator";
 import { CheckoutSidebar } from "@/components/Checkout-sidebar";
 import Navbar from "../../user/Navbar";
 import { useParams } from "next/navigation";
-
-const productData = {
-  1: {
-    id: 1,
-    name: "Wireless Headphones",
-    price: 199.99,
-    images: [
-      "/placeholder.svg?height=500&width=500",
-      "/placeholder.svg?height=500&width=500",
-      "/placeholder.svg?height=500&width=500",
-    ],
-    genre: "Electronics",
-    rating: 4.5,
-    reviews: 128,
-    description:
-      "Premium wireless headphones with noise cancellation and superior sound quality. Perfect for music lovers and professionals.",
-    features: [
-      "Noise Cancellation",
-      "30-hour battery",
-      "Bluetooth 5.0",
-      "Quick charge",
-    ],
-    inStock: true,
-  },
-};
+import axios from "axios";
 
 const reviews = [
   {
     id: 1,
     user: "John Doe",
-    avatar: "/placeholder.svg?height=40&width=40",
+    avatar: "/placeholder.svg",
     rating: 5,
     comment: "Amazing sound quality! The noise cancellation works perfectly.",
     date: "2024-01-15",
     likes: 12,
-  },
-  {
-    id: 2,
-    user: "Sarah Smith",
-    avatar: "/placeholder.svg?height=40&width=40",
-    rating: 4,
-    comment:
-      "Great headphones, but the price is a bit high. Overall satisfied with the purchase.",
-    date: "2024-01-10",
-    likes: 8,
-  },
-  {
-    id: 3,
-    user: "Mike Johnson",
-    avatar: "/placeholder.svg?height=40&width=40",
-    rating: 5,
-    comment: "Best headphones I've ever owned. The battery life is incredible!",
-    date: "2024-01-05",
-    likes: 15,
   },
 ];
 
@@ -82,18 +39,10 @@ const comments = [
   {
     id: 1,
     user: "Alice Brown",
-    avatar: "/placeholder.svg?height=40&width=40",
+    avatar: "/placeholder.svg",
     comment: "Does anyone know if these work well for gaming?",
     date: "2024-01-20",
-    replies: [
-      {
-        id: 1,
-        user: "Bob Wilson",
-        avatar: "/placeholder.svg?height=40&width=40",
-        comment: "Yes! I use them for gaming and they're fantastic.",
-        date: "2024-01-21",
-      },
-    ],
+    replies: [],
   },
 ];
 
@@ -103,46 +52,74 @@ export default function ProductDetailPage() {
   const [showCheckout, setShowCheckout] = useState(false);
   const [quantity, setQuantity] = useState(1);
   const params = useParams();
+  const [rawProduct, setRawProduct] = useState<any>(null);
 
   const containerRef = useRef<HTMLDivElement>(null);
   const imageRef = useRef<HTMLDivElement>(null);
   const detailsRef = useRef<HTMLDivElement>(null);
 
-  const product =
-    productData[params.id as unknown as keyof typeof productData] ||
-    productData[1];
+  useEffect(() => {
+    async function fetchProduct() {
+      const id = params.id;
+      try {
+        const res = await axios(`/api/products/${id}`);
+        console.log("Fetched product data:", res.data);
+        setRawProduct(res.data);
+      } catch (err) {
+        console.error("Failed to load product", err);
+      }
+    }
+    fetchProduct();
+  }, []);
+
+  const product = rawProduct
+    ? {
+        id: rawProduct.id,
+        name: rawProduct.name,
+        images: [rawProduct.photo],
+        genre: rawProduct.tag || "General",
+        price: rawProduct.amount || 0,
+        rating: rawProduct.rating || 0,
+        reviews: rawProduct.reviews || 0,
+        description: "Eco friendly and high quality product.",
+        features: rawProduct.ecoFriendly ? ["Eco Friendly"] : [],
+        inStock: true,
+      }
+    : null;
 
   useEffect(() => {
-    // GSAP Loading Animation
+    if (!imageRef.current || !detailsRef.current) return;
     const tl = gsap.timeline();
-
     tl.fromTo(
       imageRef.current,
       { opacity: 0, x: -50 },
-      { opacity: 1, x: 0, duration: 0.8, ease: "power2.out" }
+      { opacity: 1, x: 0, duration: 0.8 }
     )
       .fromTo(
         detailsRef.current,
         { opacity: 0, x: 50 },
-        { opacity: 1, x: 0, duration: 0.8, ease: "power2.out" },
+        { opacity: 1, x: 0, duration: 0.8 },
         "-=0.6"
       )
       .fromTo(
         ".review-card",
         { opacity: 0, y: 30 },
-        { opacity: 1, y: 0, duration: 0.6, stagger: 0.1, ease: "power2.out" },
-        "-=0.4"
+        { opacity: 1, y: 0, duration: 0.6, stagger: 0.1 }
       );
-  }, []);
+  }, [rawProduct]);
 
   const addToCart = () => {
     setShowCheckout(true);
-    gsap.fromTo(
-      ".checkout-sidebar",
-      { x: "100%" },
-      { x: 0, duration: 0.5, ease: "power2.out" }
-    );
+    gsap.fromTo(".checkout-sidebar", { x: "100%" }, { x: 0, duration: 0.5 });
   };
+
+  if (!product) {
+    return (
+      <div className="flex items-center justify-center min-h-screen">
+        <p className="text-gray-500">Loading product details...</p>
+      </div>
+    );
+  }
 
   return (
     <>
@@ -152,7 +129,6 @@ export default function ProductDetailPage() {
         className="min-h-screen bg-gradient-to-br from-slate-50 to-slate-100"
       >
         <div className="max-w-7xl mx-auto p-6">
-          {/* Breadcrumb */}
           <div className="mb-6">
             <Link href="/products" className="text-primary hover:underline">
               Products
@@ -162,11 +138,10 @@ export default function ProductDetailPage() {
           </div>
 
           <div className="grid lg:grid-cols-2 gap-12 mb-12">
-            {/* Product Images */}
             <div ref={imageRef} className="space-y-4">
               <div className="aspect-square rounded-lg overflow-hidden bg-white shadow-lg">
                 <Image
-                  src={product.images[selectedImage] || "/placeholder.svg"}
+                  src={product.images[0] || "/placeholder.svg"}
                   alt={product.name}
                   width={500}
                   height={500}
@@ -178,7 +153,7 @@ export default function ProductDetailPage() {
                   <button
                     key={index}
                     onClick={() => setSelectedImage(index)}
-                    className={`w-20 h-20 rounded-lg overflow-hidden border-2 transition-colors ${
+                    className={`w-20 h-20 rounded-lg overflow-hidden border-2 ${
                       selectedImage === index
                         ? "border-primary"
                         : "border-gray-200"
@@ -196,7 +171,6 @@ export default function ProductDetailPage() {
               </div>
             </div>
 
-            {/* Product Details */}
             <div ref={detailsRef} className="space-y-6">
               <div>
                 <Badge className="mb-2">{product.genre}</Badge>
@@ -209,7 +183,7 @@ export default function ProductDetailPage() {
                       <Star
                         key={i}
                         className={`w-5 h-5 ${
-                          i < Math.floor(product.rating)
+                          i < product.rating
                             ? "fill-yellow-400 text-yellow-400"
                             : "text-gray-300"
                         }`}
@@ -226,20 +200,20 @@ export default function ProductDetailPage() {
                 <p className="text-gray-700 mb-6">{product.description}</p>
               </div>
 
-              {/* Features */}
-              <div>
-                <h3 className="font-semibold mb-3">Key Features:</h3>
-                <ul className="space-y-2">
-                  {product.features.map((feature, index) => (
-                    <li key={index} className="flex items-center gap-2">
-                      <div className="w-2 h-2 bg-primary rounded-full"></div>
-                      <span>{feature}</span>
-                    </li>
-                  ))}
-                </ul>
-              </div>
+              {product.features.length > 0 && (
+                <div>
+                  <h3 className="font-semibold mb-3">Key Features:</h3>
+                  <ul className="space-y-2">
+                    {product.features.map((feature, index) => (
+                      <li key={index} className="flex items-center gap-2">
+                        <div className="w-2 h-2 bg-primary rounded-full"></div>
+                        <span>{feature}</span>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              )}
 
-              {/* Add to Cart */}
               <div className="flex gap-4">
                 <Button
                   size="lg"
@@ -257,7 +231,6 @@ export default function ProductDetailPage() {
             </div>
           </div>
 
-          {/* Reviews Section */}
           <div className="mb-12">
             <h2 className="text-2xl font-bold mb-6">Customer Reviews</h2>
             <div className="space-y-4">
@@ -266,9 +239,7 @@ export default function ProductDetailPage() {
                   <CardContent className="p-6">
                     <div className="flex items-start gap-4">
                       <Avatar>
-                        <AvatarImage
-                          src={review.avatar || "/placeholder.svg"}
-                        />
+                        <AvatarImage src={review.avatar} />
                         <AvatarFallback>{review.user[0]}</AvatarFallback>
                       </Avatar>
                       <div className="flex-1">
@@ -303,11 +274,8 @@ export default function ProductDetailPage() {
             </div>
           </div>
 
-          {/* Comments Section */}
           <div>
             <h2 className="text-2xl font-bold mb-6">Questions & Comments</h2>
-
-            {/* Add Comment */}
             <Card className="mb-6">
               <CardContent className="p-6">
                 <Textarea
@@ -322,17 +290,13 @@ export default function ProductDetailPage() {
                 </Button>
               </CardContent>
             </Card>
-
-            {/* Comments List */}
             <div className="space-y-4">
               {comments.map((comment) => (
                 <Card key={comment.id}>
                   <CardContent className="p-6">
                     <div className="flex items-start gap-4">
                       <Avatar>
-                        <AvatarImage
-                          src={comment.avatar || "/placeholder.svg"}
-                        />
+                        <AvatarImage src={comment.avatar} />
                         <AvatarFallback>{comment.user[0]}</AvatarFallback>
                       </Avatar>
                       <div className="flex-1">
@@ -343,41 +307,6 @@ export default function ProductDetailPage() {
                           </span>
                         </div>
                         <p className="text-gray-700 mb-4">{comment.comment}</p>
-
-                        {/* Replies */}
-                        {comment.replies && comment.replies.length > 0 && (
-                          <div className="ml-8 space-y-3">
-                            <Separator />
-                            {comment.replies.map((reply) => (
-                              <div
-                                key={reply.id}
-                                className="flex items-start gap-3"
-                              >
-                                <Avatar className="w-8 h-8">
-                                  <AvatarImage
-                                    src={reply.avatar || "/placeholder.svg"}
-                                  />
-                                  <AvatarFallback>
-                                    {reply.user[0]}
-                                  </AvatarFallback>
-                                </Avatar>
-                                <div>
-                                  <div className="flex items-center gap-2 mb-1">
-                                    <h5 className="font-medium text-sm">
-                                      {reply.user}
-                                    </h5>
-                                    <span className="text-xs text-gray-500">
-                                      {reply.date}
-                                    </span>
-                                  </div>
-                                  <p className="text-sm text-gray-700">
-                                    {reply.comment}
-                                  </p>
-                                </div>
-                              </div>
-                            ))}
-                          </div>
-                        )}
                       </div>
                     </div>
                   </CardContent>
@@ -386,8 +315,6 @@ export default function ProductDetailPage() {
             </div>
           </div>
         </div>
-
-        {/* Checkout Sidebar */}
         {showCheckout && (
           <CheckoutSidebar
             product={product}

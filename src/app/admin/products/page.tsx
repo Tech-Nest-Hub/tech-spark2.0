@@ -203,6 +203,7 @@ export default function ProductsPage() {
           rating: parseFloat(formData.rating) || 0,
           reviews: parseInt(formData.reviews),
           ecoFriendly: formData.ecoFriendly,
+          amount: formData.amount || 0,
         }),
       });
 
