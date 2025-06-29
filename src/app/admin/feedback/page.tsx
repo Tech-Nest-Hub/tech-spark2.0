@@ -186,7 +186,7 @@ export default function FeedbackPage() {
   const [searchTerm, setSearchTerm] = useState("")
 
   const selectedProductData = products.find((p) => p.id === selectedProduct)
-  const currentFeedback = productFeedback[selectedProduct] || []
+const currentFeedback = (productFeedback as { [key: number]: any })[selectedProduct] || [];
 
   const renderStars = (rating: number) => {
     return Array.from({ length: 5 }, (_, i) => (
@@ -263,7 +263,7 @@ export default function FeedbackPage() {
 
               {/* Feedback Messages */}
               <div className="flex-1 overflow-y-auto p-6 space-y-6 bg-gradient-to-b from-white/20 to-blue-50/20">
-                {currentFeedback.map((feedback) => (
+                {currentFeedback.map((feedback:any) => (
                   <div
                     key={feedback.id}
                     className="bg-white rounded-xl p-6 shadow-sm border border-gray-100 hover:shadow-md transition-shadow"
@@ -274,7 +274,7 @@ export default function FeedbackPage() {
                         <AvatarFallback className="bg-gradient-to-br from-blue-500 to-purple-600 text-white font-semibold">
                           {feedback.sender
                             .split(" ")
-                            .map((n) => n[0])
+                            .map((n:any) => n[0])
                             .join("")}
                         </AvatarFallback>
                       </Avatar>
