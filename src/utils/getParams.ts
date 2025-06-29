@@ -1,4 +1,4 @@
-function getParam(urlString: string): string | null {
+export function getParam(urlString: string): string | null {
   try {
     const url = new URL(urlString);
     const segments = url.pathname.split("/").filter(Boolean);

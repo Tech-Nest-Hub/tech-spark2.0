@@ -9,10 +9,12 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
 
     const { productId, amount = 100 } = await req.json();
-
-    // const product = await prisma.product.findUnique({ where: { id: productId } });
-    // if (!product)
-    //   return NextResponse.json({ error: "Product not found" }, { status: 404 });
+    console.log("productId:", productId);
+    const product = await prisma.product.findUnique({
+      where: { id: productId },
+    });
+    if (!product)
+      return NextResponse.json({ error: "Product not found" }, { status: 404 });
 
     const data: any = {
       user: { connect: { clerkId: userId } },
@@ -20,14 +22,14 @@ export async function POST(req: NextRequest) {
     };
 
     // Only connect product if productId is given
-    // if (productId) {
-    //   data.product = { connect: { id: productId } };
-    // }
+    if (productId) {
+      data.product = { connect: { id: productId } };
+    }
 
     const order = await prisma.order.create({ data });
 
-    const successUrl = `https://${process.env.DOMAIN}/esewa-success?oid=${order.id}&amt=${order.amount}`;
-    const failUrl = `https://${process.env.DOMAIN}/esewa-fail?oid=${order.id}`;
+    const successUrl = `${process.env.DOMAIN}/esewa-success?oid=${order.id}&amt=${order.amount}`;
+    const failUrl = `${process.env.DOMAIN}/esewa-fail?oid=${order.id}`;
     const esewaUrl = `https://rc.esewa.com.np/epay/main?amt=${
       order.amount
     }&pdc=0&psc=0&txAmt=0&tAmt=${order.amount}&pid=${

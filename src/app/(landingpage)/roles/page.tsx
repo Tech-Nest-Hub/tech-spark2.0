@@ -110,7 +110,7 @@ export default function Page() {
                         </div>
                       </div>
 
-                      <Button className="w-full bg-gray-900 hover:bg-gray-800 text-white py-3 text-lg font-semibold group-hover:bg-gray-800 transition-colors">
+                      <Button className="w-full hover:cursor-pointer bg-gray-900 hover:bg-gray-800 text-white py-3 text-lg font-semibold group-hover:bg-gray-800 transition-colors">
                         Start Selling
                         <ArrowRight className="w-5 h-5 ml-2 group-hover:translate-x-1 transition-transform" />
                       </Button>
@@ -195,7 +195,7 @@ export default function Page() {
                         </div>
                       </div>
 
-                      <Button className="w-full bg-gray-900 hover:bg-gray-800 text-white py-3 text-lg font-semibold group-hover:bg-gray-800 transition-colors">
+                      <Button className="w-full hover:cursor-pointer bg-gray-900 hover:bg-gray-800 text-white py-3 text-lg font-semibold group-hover:bg-gray-800 transition-colors">
                         Start Shopping
                         <ArrowRight className="w-5 h-5 ml-2 group-hover:translate-x-1 transition-transform" />
                       </Button>

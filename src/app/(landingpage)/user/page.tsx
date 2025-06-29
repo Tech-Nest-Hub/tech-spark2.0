@@ -1,175 +1,74 @@
-"use client";
+"use client"
 
-import { motion } from "framer-motion";
-import { useState, useEffect } from "react";
-import { useRouter } from "next/navigation";
-import { Menu, X, ChevronRight, Search } from "lucide-react";
-
-import axios from "axios";
-import { useClerk, useUser } from "@clerk/nextjs";
-
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { FloatingCards } from "./data";
+import { motion } from "framer-motion"
+import { useState, useEffect } from "react"
+import { useRouter } from "next/navigation"
+import {
+  Menu,
+  X,
+  ChevronRight,
+  Search,
+  Star,
+  Heart,
+  ShoppingCart,
+  TrendingUp,
+  Zap,
+  ArrowRight,
+  ChevronLeft,
+} from "lucide-react"
+import { Button } from "@/components/ui/button"
+import { Input } from "@/components/ui/input"
+import { Card, CardContent } from "@/components/ui/card"
+import { Badge } from "@/components/ui/badge"
+import { categories, FloatingCards, topPicks, trendingProducts } from "./data"
+import Navbar from "./Navbar"
+import Footer from "./Footer"
 
 export default function TechspireMarketplace() {
-  const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const [scrollY, setScrollY] = useState(0);
-  const [cardsSpread, setCardsSpread] = useState(false);
-  const router = useRouter();
-  const { user } = useUser();
+  const [isMenuOpen, setIsMenuOpen] = useState(false)
+  const [scrollY, setScrollY] = useState(0)
+  const [cardsSpread, setCardsSpread] = useState(false)
+  const [currentSlide, setCurrentSlide] = useState(0)
+  const router = useRouter()
 
   useEffect(() => {
-    const handleScroll = () => setScrollY(window.scrollY);
-    window.addEventListener("scroll", handleScroll);
-    return () => window.removeEventListener("scroll", handleScroll);
-  }, []);
+    const handleScroll = () => setScrollY(window.scrollY)
+    window.addEventListener("scroll", handleScroll)
+    return () => window.removeEventListener("scroll", handleScroll)
+  }, [])
 
   useEffect(() => {
     const timer = setTimeout(() => {
-      setCardsSpread(true);
-    }, 2000); // Wait 2 seconds after initial animation
-    return () => clearTimeout(timer);
-  }, []);
+      setCardsSpread(true)
+    }, 2000)
+    return () => clearTimeout(timer)
+  }, [])
 
+  // Auto-slide for trending carousel
   useEffect(() => {
-    async function syncUser() {
-      try {
-        await axios.post("/api/sync-user?role=USER");
-      } catch (error) {
-        console.log("failed to sync");
-      }
-    }
-    syncUser();
-  }, []);
+    const timer = setInterval(() => {
+      setCurrentSlide((prev) => (prev + 1) % Math.ceil(trendingProducts.length / 3))
+    }, 4000)
+    return () => clearInterval(timer)
+  }, [])
 
-  const { signOut } = useClerk();
+  const nextSlide = () => {
+    setCurrentSlide((prev) => (prev + 1) % Math.ceil(trendingProducts.length / 3))
+  }
 
-  const handleLogout = async () => {
-    await signOut();
-    router.push("/");
-  };
+  const prevSlide = () => {
+    setCurrentSlide(
+      (prev) => (prev - 1 + Math.ceil(trendingProducts.length / 3)) % Math.ceil(trendingProducts.length / 3),
+    )
+  }
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 to-blue-50">
       {/* Navigation */}
-      <nav className="fixed top-0 w-full bg-white/80 backdrop-blur-md z-50 border-b border-gray-200">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex justify-between items-center h-16">
-            <motion.div
-              initial={{ opacity: 0, x: -20 }}
-              animate={{ opacity: 1, x: 0 }}
-              className="flex items-center space-x-2"
-            >
-              <div className="w-8 h-8 bg-gradient-to-r from-blue-600 to-purple-600 rounded-lg flex items-center justify-center">
-                <span className="text-white font-bold text-sm">T</span>
-              </div>
-              <span className="text-xl font-bold text-gray-900">Techspire</span>
-            </motion.div>
-
-            {/* Desktop Navigation */}
-            <div className="hidden md:flex items-center space-x-8">
-              <a
-                href="./"
-                className="text-gray-700 hover:text-blue-600 transition-colors"
-              >
-                Home
-              </a>
-
-              <a
-                href="/products"
-                className="text-gray-700 hover:text-blue-600 transition-colors"
-              >
-                Products
-              </a>
-              <a
-                href="#tracks"
-                className="text-gray-700 hover:text-blue-600 transition-colors"
-              >
-                Pages
-              </a>
-            </div>
-            {user ? (
-              <Button
-                onClick={() => handleLogout()}
-                className=" hidden md:block bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700"
-              >
-                Log out
-              </Button>
-            ) : (
-              <Button
-                onClick={() => router.push("/roles")}
-                className=" hidden md:block bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700"
-              >
-                Get Started
-              </Button>
-            )}
-
-            {/* Mobile menu button */}
-            <div className="md:hidden">
-              <Button
-                variant="ghost"
-                size="icon"
-                onClick={() => setIsMenuOpen(!isMenuOpen)}
-              >
-                {isMenuOpen ? (
-                  <X className="w-6 h-6" />
-                ) : (
-                  <Menu className="w-6 h-6" />
-                )}
-              </Button>
-            </div>
-          </div>
-        </div>
-
-        {/* Mobile Navigation */}
-        {isMenuOpen && (
-          <motion.div
-            initial={{ opacity: 0, y: -20 }}
-            animate={{ opacity: 1, y: 0 }}
-            className="md:hidden bg-white border-t border-gray-200"
-          >
-            <div className="px-4 py-2 space-y-2">
-              <a
-                href="#home"
-                className="block py-2 text-gray-700 hover:text-blue-600"
-              >
-                Home
-              </a>
-              <a
-                href="#features"
-                className="block py-2 text-gray-700 hover:text-blue-600"
-              >
-                Features
-              </a>
-              <a
-                href="#tracks"
-                className="block py-2 text-gray-700 hover:text-blue-600"
-              >
-                How It Works
-              </a>
-              <a
-                href="#about"
-                className="block py-2 text-gray-700 hover:text-blue-600"
-              >
-                About
-              </a>
-              <Button
-                onClick={() => router.push("/roles")}
-                className="w-full mt-2 bg-gradient-to-r from-blue-600 to-purple-600"
-              >
-                Get Started
-              </Button>
-            </div>
-          </motion.div>
-        )}
-      </nav>
+      <Navbar />
 
       {/* Hero Section */}
-      <section
-        id="home"
-        className="pt-24 pb-16 px-4 sm:px-6 lg:px-8 overflow-hidden"
-      >
+      <section id="home" className="pt-24 pb-16 px-4 sm:px-6 lg:px-8 overflow-hidden">
         <div className="max-w-7xl mx-auto">
           <div className="text-center">
             <motion.h1
@@ -183,9 +82,7 @@ export default function TechspireMarketplace() {
                 Techspire Marketplace
               </span>
               <br />
-              <span className="text-3xl sm:text-4xl lg:text-5xl">
-                Empowering Campus Commerce
-              </span>
+              <span className="text-3xl sm:text-4xl lg:text-5xl">Empowering Campus Commerce</span>
             </motion.h1>
 
             <motion.p
@@ -194,30 +91,32 @@ export default function TechspireMarketplace() {
               transition={{ duration: 0.8, delay: 0.2 }}
               className="text-xl text-gray-600 mb-8 max-w-3xl mx-auto"
             >
-              A digital platform for college startups to connect, showcase, and
-              grow within a thriving campus ecosystem.
+              A digital platform for college startups to connect, showcase, and grow within a thriving campus ecosystem.
             </motion.p>
 
             <motion.div
               initial={{ opacity: 0, y: 30 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.8, delay: 0.4 }}
-              className="flex flex-col sm:flex-row gap-2 justify-center mb-16"
+              className="flex flex-col sm:flex-row gap-2 justify-center mb-16 max-w-md mx-auto"
             >
-              <Input
-                type="text"
-                placeholder="Search for products or startups..."
-                className="w-full sm:w-80 bg-white border border-gray-300 rounded-lg px-4 py-4  focus:outline-none focus:ring-2 focus:ring-blue-600 transition-colors"
-              />
-
-              <button className="border border-slate-500 cursor-pointer rounded-full p-2"><Search className="w-5 h-4 " /></button>
-
-              
-
+              <div className="relative flex-1">
+                <Input
+                  type="text"
+                  placeholder="Search for products or startups..."
+                  className="w-full bg-white border border-gray-300 rounded-lg px-4 py-4 pr-12 focus:outline-none focus:ring-2 focus:ring-blue-600 transition-colors"
+                />
+                <Button
+                  size="icon"
+                  className="absolute right-1 top-1 bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700"
+                >
+                  <Search className="w-4 h-4" />
+                </Button>
+              </div>
             </motion.div>
 
-            {/* Floating Cards Animation */}
-            <div className=" hidden relative h-96 md:flex items-center justify-center">
+           {/* Floating Cards Animation */}
+           <div className=" hidden relative h-96 md:flex items-center justify-center">
               {FloatingCards.map((card) => (
                 <motion.div
                   key={card.id}
@@ -276,119 +175,264 @@ export default function TechspireMarketplace() {
               transition={{ duration: 0.8, delay: 1.5 }}
               className="text-gray-600 mt-8"
             >
-              Startups can showcase their innovations, and students can discover
-              amazing products and services.
+              Startups can showcase their innovations, and students can discover amazing products and services.
             </motion.p>
           </div>
         </div>
       </section>
 
-
-      {/* Footer */}
-      <footer className="bg-gray-900 text-white py-12 px-4 sm:px-6 lg:px-8">
+      {/* Trending Section */}
+      <section id="trending" className="py-16 px-4 sm:px-6 lg:px-8 bg-white">
         <div className="max-w-7xl mx-auto">
-          <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
-            <div className="col-span-1 md:col-span-2">
-              <div className="flex items-center space-x-2 mb-4">
-                <div className="w-8 h-8 bg-gradient-to-r from-blue-600 to-purple-600 rounded-lg flex items-center justify-center">
-                  <span className="text-white font-bold text-sm">T</span>
-                </div>
-                <span className="text-xl font-bold">Techspire Marketplace</span>
-              </div>
-              <p className="text-gray-400 mb-4 max-w-md">
-                Empowering campus commerce through innovative digital solutions
-                for student entrepreneurs.
-              </p>
-              <div className="flex space-x-4">
-                <div className="w-8 h-8 bg-gray-800 rounded-full flex items-center justify-center hover:bg-blue-600 transition-colors cursor-pointer">
-                  <span className="text-sm">f</span>
-                </div>
-                <div className="w-8 h-8 bg-gray-800 rounded-full flex items-center justify-center hover:bg-blue-600 transition-colors cursor-pointer">
-                  <span className="text-sm">t</span>
-                </div>
-                <div className="w-8 h-8 bg-gray-800 rounded-full flex items-center justify-center hover:bg-blue-600 transition-colors cursor-pointer">
-                  <span className="text-sm">in</span>
-                </div>
-              </div>
+          <motion.div
+            initial={{ opacity: 0, y: 30 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6 }}
+            className="text-center mb-12"
+          >
+            <div className="flex items-center justify-center gap-2 mb-4">
+              <TrendingUp className="w-6 h-6 text-blue-600" />
+              <h2 className="text-3xl sm:text-4xl font-bold text-gray-900">Trending Now</h2>
             </div>
-
-            <div>
-              <h3 className="text-lg font-semibold mb-4">Quick Links</h3>
-              <ul className="space-y-2">
-                <li>
-                  <a
-                    href="#home"
-                    className="text-gray-400 hover:text-white transition-colors"
-                  >
-                    Home
-                  </a>
-                </li>
-                <li>
-                  <a
-                    href="#features"
-                    className="text-gray-400 hover:text-white transition-colors"
-                  >
-                    Features
-                  </a>
-                </li>
-
-                <li>
-                  <a
-                    href="#about"
-                    className="text-gray-400 hover:text-white transition-colors"
-                  >
-                    About
-                  </a>
-                </li>
-              </ul>
-            </div>
-
-            <div>
-              <h3 className="text-lg font-semibold mb-4">Support</h3>
-              <ul className="space-y-2">
-                <li>
-                  <a
-                    href="#"
-                    className="text-gray-400 hover:text-white transition-colors"
-                  >
-                    FAQ
-                  </a>
-                </li>
-                <li>
-                  <a
-                    href="#"
-                    className="text-gray-400 hover:text-white transition-colors"
-                  >
-                    Contact
-                  </a>
-                </li>
-                <li>
-                  <a
-                    href="#"
-                    className="text-gray-400 hover:text-white transition-colors"
-                  >
-                    Privacy Policy
-                  </a>
-                </li>
-                <li>
-                  <a
-                    href="#"
-                    className="text-gray-400 hover:text-white transition-colors"
-                  >
-                    Terms of Service
-                  </a>
-                </li>
-              </ul>
-            </div>
-          </div>
-
-          <div className="border-t border-gray-800 mt-8 pt-8 text-center">
-            <p className="text-gray-400">
-              © 2024 Techspire Marketplace. All rights reserved.
+            <p className="text-gray-600 max-w-2xl mx-auto">
+              Discover the hottest products from campus startups that everyone's talking about
             </p>
+          </motion.div>
+
+          {/* Trending Carousel */}
+          <div className="relative">
+            <div className="overflow-hidden">
+              <motion.div
+                className="flex transition-transform duration-500 ease-in-out"
+                style={{ transform: `translateX(-${currentSlide * 100}%)` }}
+              >
+                {Array.from({ length: Math.ceil(trendingProducts.length / 3) }).map((_, slideIndex) => (
+                  <div key={slideIndex} className="w-full flex-shrink-0">
+                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                      {trendingProducts.slice(slideIndex * 3, slideIndex * 3 + 3).map((product, index) => (
+                        <motion.div
+                          key={product.id}
+                          initial={{ opacity: 0, y: 20 }}
+                          whileInView={{ opacity: 1, y: 0 }}
+                          transition={{ duration: 0.5, delay: index * 0.1 }}
+                          whileHover={{ y: -5 }}
+                          className="group"
+                        >
+                          <Card className="overflow-hidden border-0 shadow-lg hover:shadow-xl transition-all duration-300">
+                            <div className="relative">
+                              <img
+                                src={product.image || "/placeholder.svg"}
+                                alt={product.name}
+                                className="w-full h-48 object-cover group-hover:scale-105 transition-transform duration-300"
+                              />
+                              <Badge
+                                className={`absolute top-3 left-3 ${product.badge === "Trending"
+                                    ? "bg-red-500"
+                                    : product.badge === "Hot"
+                                      ? "bg-orange-500"
+                                      : product.badge === "New"
+                                        ? "bg-green-500"
+                                        : product.badge === "Popular"
+                                          ? "bg-blue-500"
+                                          : "bg-purple-500"
+                                  }`}
+                              >
+                                {product.badge}
+                              </Badge>
+                              <Button
+                                size="icon"
+                                variant="ghost"
+                                className="absolute top-3 right-3 bg-white/80 hover:bg-white"
+                              >
+                                <Heart className="w-4 h-4" />
+                              </Button>
+                            </div>
+                            <CardContent className="p-4">
+                              <div className="flex items-center gap-1 mb-2">
+                                <Star className="w-4 h-4 fill-yellow-400 text-yellow-400" />
+                                <span className="text-sm font-medium">{product.rating}</span>
+                                <span className="text-sm text-gray-500">({product.reviews})</span>
+                              </div>
+                              <h3 className="font-semibold text-gray-900 mb-1">{product.name}</h3>
+                              <p className="text-sm text-gray-600 mb-3">by {product.startup}</p>
+                              <div className="flex items-center justify-between">
+                                <div className="flex items-center gap-2">
+                                  <span className="text-lg font-bold text-gray-900">{product.price}</span>
+                                  <span className="text-sm text-gray-500 line-through">{product.originalPrice}</span>
+                                </div>
+                                <Button size="sm" className="bg-gradient-to-r from-blue-600 to-purple-600">
+                                  <ShoppingCart className="w-4 h-4 mr-1" />
+                                  Add
+                                </Button>
+                              </div>
+                            </CardContent>
+                          </Card>
+                        </motion.div>
+                      ))}
+                    </div>
+                  </div>
+                ))}
+              </motion.div>
+            </div>
+
+            {/* Carousel Controls */}
+            <Button
+              variant="outline"
+              size="icon"
+              className="absolute left-4 top-1/2 -translate-y-1/2 bg-white/80 hover:bg-white"
+              onClick={prevSlide}
+            >
+              <ChevronLeft className="w-4 h-4" />
+            </Button>
+            <Button
+              variant="outline"
+              size="icon"
+              className="absolute right-4 top-1/2 -translate-y-1/2 bg-white/80 hover:bg-white"
+              onClick={nextSlide}
+            >
+              <ChevronRight className="w-4 h-4" />
+            </Button>
+
+            {/* Carousel Indicators */}
+            <div className="flex justify-center mt-6 gap-2">
+              {Array.from({ length: Math.ceil(trendingProducts.length / 3) }).map((_, index) => (
+                <button
+                  key={index}
+                  className={`w-2 h-2 rounded-full transition-colors ${index === currentSlide ? "bg-blue-600" : "bg-gray-300"
+                    }`}
+                  onClick={() => setCurrentSlide(index)}
+                />
+              ))}
+            </div>
           </div>
         </div>
-      </footer>
+      </section>
+
+      {/* Top Picks Section */}
+      <section className="py-16 px-4 sm:px-6 lg:px-8 bg-gradient-to-br from-blue-50 to-purple-50">
+        <div className="max-w-7xl mx-auto">
+          <motion.div
+            initial={{ opacity: 0, y: 30 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6 }}
+            className="text-center mb-12"
+          >
+            <div className="flex items-center justify-center gap-2 mb-4">
+              <Zap className="w-6 h-6 text-purple-600" />
+              <h2 className="text-3xl sm:text-4xl font-bold text-gray-900">Top Picks</h2>
+            </div>
+            <p className="text-gray-600 max-w-2xl mx-auto">
+              Hand-selected premium products that deliver exceptional value for students
+            </p>
+          </motion.div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+            {topPicks.map((product, index) => (
+              <motion.div
+                key={product.id}
+                initial={{ opacity: 0, y: 30 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.6, delay: index * 0.1 }}
+                whileHover={{ y: -8 }}
+                className="group"
+              >
+                <Card className="overflow-hidden border-0 shadow-lg hover:shadow-2xl transition-all duration-300 bg-white/80 backdrop-blur-sm">
+                  <div className="relative">
+                    <img
+                      src={product.image || "/placeholder.svg"}
+                      alt={product.name}
+                      className="w-full h-56 object-cover group-hover:scale-105 transition-transform duration-300"
+                    />
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+                    <Button
+                      size="icon"
+                      variant="ghost"
+                      className="absolute top-3 right-3 bg-white/80 hover:bg-white opacity-0 group-hover:opacity-100 transition-opacity duration-300"
+                    >
+                      <Heart className="w-4 h-4" />
+                    </Button>
+                  </div>
+                  <CardContent className="p-6">
+                    <div className="flex items-center gap-1 mb-2">
+                      <Star className="w-4 h-4 fill-yellow-400 text-yellow-400" />
+                      <span className="text-sm font-medium">{product.rating}</span>
+                      <span className="text-sm text-gray-500">({product.reviews})</span>
+                    </div>
+                    <h3 className="font-bold text-gray-900 mb-1 text-lg">{product.name}</h3>
+                    <p className="text-sm text-gray-600 mb-2">by {product.startup}</p>
+                    <p className="text-sm text-gray-600 mb-4">{product.description}</p>
+                    <div className="flex items-center justify-between">
+                      <span className="text-xl font-bold text-gray-900">{product.price}</span>
+                      <Button className="bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-700 hover:to-blue-700">
+                        <ShoppingCart className="w-4 h-4 mr-2" />
+                        Buy Now
+                      </Button>
+                    </div>
+                  </CardContent>
+                </Card>
+              </motion.div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+
+      {/* Categories Section */}
+      <section id="categories" className="py-16 px-4 sm:px-6 lg:px-8 bg-white">
+        <div className="max-w-7xl mx-auto">
+          <motion.div
+            initial={{ opacity: 0, y: 30 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6 }}
+            className="text-center mb-12"
+          >
+            <h2 className="text-3xl sm:text-4xl font-bold text-gray-900 mb-4">Shop by Category</h2>
+            <p className="text-gray-600 max-w-2xl mx-auto">
+              Explore our diverse range of products across different categories
+            </p>
+          </motion.div>
+
+          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
+            {categories.map((category, index) => (
+              <motion.div
+                key={category.name}
+                initial={{ opacity: 0, scale: 0.8 }}
+                whileInView={{ opacity: 1, scale: 1 }}
+                transition={{ duration: 0.5, delay: index * 0.1 }}
+                whileHover={{ scale: 1.05 }}
+                className="group cursor-pointer"
+              >
+                <Card className="border-0 shadow-lg hover:shadow-xl transition-all duration-300 overflow-hidden">
+                  <CardContent className="p-6 text-center">
+                    <div
+                      className={`w-16 h-16 mx-auto mb-4 rounded-full bg-gradient-to-r ${category.color} flex items-center justify-center group-hover:scale-110 transition-transform duration-300`}
+                    >
+                      <category.icon className="w-8 h-8 text-white" />
+                    </div>
+                    <h3 className="font-semibold text-gray-900 mb-1">{category.name}</h3>
+                    <p className="text-sm text-gray-600">{category.count} products</p>
+                  </CardContent>
+                </Card>
+              </motion.div>
+            ))}
+          </div>
+
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6, delay: 0.3 }}
+            className="text-center mt-12"
+          >
+            <Button className="bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 px-8 py-3 text-lg">
+              View All Categories
+              <ArrowRight className="w-5 h-5 ml-2" />
+            </Button>
+          </motion.div>
+        </div>
+      </section>
+      <section>
+        <Footer />
+      </section>
     </div>
-  );
+  )
 }

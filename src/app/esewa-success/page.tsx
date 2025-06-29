@@ -19,7 +19,7 @@ export default function EsewaSuccessPage() {
         });
       }
 
-      router.push("/payment-success");
+      router.push("/user");
     };
 
     verify();
