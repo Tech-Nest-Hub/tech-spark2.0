@@ -2,16 +2,28 @@
 
 import { motion } from "framer-motion";
 import { useState, useEffect } from "react";
-import { track, feature } from "@/data/datacenter";
-import { ArrowRight, Menu, X, ChevronRight } from "lucide-react";
-import { Button } from "@/components/ui/button";
 import { useRouter } from "next/navigation";
-import axios from "axios";
+import {
+  ArrowRight,
+  Users,
+  CreditCard,
+  BarChart3,
+  Leaf,
+  UserCheck,
+  Zap,
+  Shield,
+  Network,
+  Menu,
+  X,
+  ChevronRight,
+  Sparkles,
+} from "lucide-react";
+import { Button } from "@/components/ui/button";
 
 export default function TechspireMarketplace() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [scrollY, setScrollY] = useState(0);
-
+  const [cardsSpread, setCardsSpread] = useState(false);
   const router = useRouter();
 
   useEffect(() => {
@@ -20,39 +32,140 @@ export default function TechspireMarketplace() {
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
-  const tracks = track;
-
-  const features = feature;
-
   useEffect(() => {
-    async function syncUser() {
-      try {
-        await axios.post("/api/sync-user?role=USER");
-      } catch (error) {
-        console.log("failed to sync");
-      }
-    }
-    syncUser();
+    const timer = setTimeout(() => {
+      setCardsSpread(true);
+    }, 2000); // Wait 2 seconds after initial animation
+    return () => clearTimeout(timer);
   }, []);
 
-  //   const floatingCards = [
-  //     { id: 1, rotation: -15, x: 10, y: 10, delay: 0 },
-  //     { id: 2, rotation: 10, x: 30, y: -15, delay: 0.2 },
-  //     { id: 3, rotation: -8, x: -10, y: 25, delay: 0.4 },
-  //     { id: 4, rotation: 12, x: 40, y: 5, delay: 0.6 },
-  //     { id: 5, rotation: -20, x: -30, y: -10, delay: 0.8 },
-  //     { id: 6, rotation: 15, x: 20, y: 30, delay: 1.0 },
-  //     { id: 7, rotation: -5, x: 0, y: -20, delay: 1.2 },
-  //   ]
+  const tracks = [
+    {
+      title: "Startup Showcase Portal",
+      description:
+        "Display your innovative products and services to the campus community",
+      icon: <Sparkles className="w-6 h-6" />,
+      color: "from-blue-500 to-cyan-500",
+    },
+    {
+      title: "Student-Centric Marketplace",
+      description:
+        "Tailored shopping experience designed specifically for student needs",
+      icon: <Users className="w-6 h-6" />,
+      color: "from-green-500 to-emerald-500",
+    },
+    {
+      title: "Wallet & Digital Payment",
+      description:
+        "Secure mock payment system for seamless campus transactions",
+      icon: <CreditCard className="w-6 h-6" />,
+      color: "from-purple-500 to-violet-500",
+    },
+    {
+      title: "Mentor Connect Module",
+      description: "Connect with experienced mentors to grow your startup",
+      icon: <Network className="w-6 h-6" />,
+      color: "from-orange-500 to-red-500",
+    },
+    {
+      title: "Analytics Dashboard",
+      description: "Track your startup's performance with detailed insights",
+      icon: <BarChart3 className="w-6 h-6" />,
+      color: "from-teal-500 to-blue-500",
+    },
+    {
+      title: "Sustainability Bonus",
+      description:
+        "Promote eco-friendly practices and sustainable business models",
+      icon: <Leaf className="w-6 h-6" />,
+      color: "from-green-600 to-lime-500",
+    },
+  ];
+
+  const features = [
+    {
+      title: "Secure & Verified Student Marketplace",
+      description:
+        "Only verified students and startups can participate, ensuring a trusted community",
+      icon: <Shield className="w-8 h-8" />,
+    },
+    {
+      title: "Real-time Payment Simulation",
+      description:
+        "Experience seamless transactions with our mock payment system",
+      icon: <Zap className="w-8 h-8" />,
+    },
+    {
+      title: "Mentor Network for Campus Founders",
+      description: "Connect with successful entrepreneurs and industry experts",
+      icon: <UserCheck className="w-8 h-8" />,
+    },
+  ];
 
   const floatingCards = [
-    { id: 1, rotation: -15, x: 10, y: 10, delay: 0 },
-    { id: 2, rotation: 10, x: 30, y: -15, delay: 0.2 },
-    { id: 3, rotation: -8, x: -10, y: 25, delay: 0.4 },
-    { id: 4, rotation: 12, x: 40, y: 5, delay: 0.6 },
-    { id: 5, rotation: -20, x: -30, y: -10, delay: 0.8 },
-    { id: 6, rotation: 15, x: 20, y: 30, delay: 1.0 },
-    { id: 7, rotation: -5, x: 0, y: -20, delay: 1.2 },
+    {
+      id: 1,
+      rotation: -15,
+      centerX: 0,
+      centerY: 0,
+      finalX: -300,
+      finalY: 0,
+      delay: 0,
+    },
+    {
+      id: 2,
+      rotation: 10,
+      centerX: 0,
+      centerY: 0,
+      finalX: -160,
+      finalY: -20,
+      delay: 0.2,
+    },
+    {
+      id: 3,
+      rotation: -8,
+      centerX: 0,
+      centerY: 0,
+      finalX: -60,
+      finalY: 15,
+      delay: 0.4,
+    },
+    {
+      id: 4,
+      rotation: 12,
+      centerX: 0,
+      centerY: 0,
+      finalX: 0,
+      finalY: -10,
+      delay: 0.6,
+    },
+    {
+      id: 5,
+      rotation: -20,
+      centerX: 0,
+      centerY: 0,
+      finalX: 100,
+      finalY: 20,
+      delay: 0.8,
+    },
+    {
+      id: 6,
+      rotation: 15,
+      centerX: 0,
+      centerY: 0,
+      finalX: 220,
+      finalY: -15,
+      delay: 1.0,
+    },
+    {
+      id: 7,
+      rotation: -5,
+      centerX: 0,
+      centerY: 0,
+      finalX: 350,
+      finalY: 5,
+      delay: 1.2,
+    },
   ];
 
   return (
@@ -74,33 +187,29 @@ export default function TechspireMarketplace() {
 
             {/* Desktop Navigation */}
             <div className="hidden md:flex items-center space-x-8">
-              <div className="flex items-center space-x-4">
-                <a
-                  href="#home"
-                  className="text-gray-700 hover:text-blue-600 transition-colors"
-                >
-                  Home
-                </a>
-                <a
-                  href="#features"
-                  className="text-gray-700 hover:text-blue-600 transition-colors"
-                >
-                  Products
-                </a>
-                <a
-                  href="#tracks"
-                  className="text-gray-700 hover:text-blue-600 transition-colors"
-                >
-                  Pages
-                </a>
-              </div>
-              {/* <a href="#about" className="text-gray-700 hover:text-blue-600 transition-colors">
-                About
-              </a> */}
+              <a
+                href="#home"
+                className="text-gray-700 hover:text-blue-600 transition-colors"
+              >
+                Home
+              </a>
+
+              <a
+                href="/products"
+                className="text-gray-700 hover:text-blue-600 transition-colors"
+              >
+                Products
+              </a>
+              <a
+                href="#tracks"
+                className="text-gray-700 hover:text-blue-600 transition-colors"
+              >
+                Pages
+              </a>
             </div>
 
             <Button
-              onClick={() => router.push("/sign-in")}
+              onClick={() => router.push("/roles")}
               className=" hidden md:block bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700"
             >
               Get Started
@@ -155,7 +264,10 @@ export default function TechspireMarketplace() {
               >
                 About
               </a>
-              <Button className="w-full mt-2 bg-gradient-to-r from-blue-600 to-purple-600">
+              <Button
+                onClick={() => router.push("/roles")}
+                className="w-full mt-2 bg-gradient-to-r from-blue-600 to-purple-600"
+              >
                 Get Started
               </Button>
             </div>
@@ -176,7 +288,7 @@ export default function TechspireMarketplace() {
               transition={{ duration: 0.8 }}
               className="text-4xl sm:text-5xl lg:text-6xl font-bold text-gray-900 mb-6"
             >
-              {" "}
+              Build{" "}
               <span className="bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
                 Techspire Marketplace
               </span>
@@ -234,14 +346,14 @@ export default function TechspireMarketplace() {
                     opacity: 1,
                     scale: 1,
                     rotate: card.rotation,
-                    x: card.x,
-                    y: card.y,
+                    x: cardsSpread ? card.finalX : card.centerX,
+                    y: cardsSpread ? card.finalY : card.centerY,
                   }}
                   transition={{
-                    duration: 1,
-                    delay: card.delay,
+                    duration: cardsSpread ? 0.8 : 1,
+                    delay: cardsSpread ? card.delay * 0.1 : card.delay,
                     type: "spring",
-                    stiffness: 100,
+                    stiffness: cardsSpread ? 120 : 100,
                   }}
                   whileHover={{
                     scale: 1.05,

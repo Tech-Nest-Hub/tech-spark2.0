@@ -40,7 +40,6 @@ import ProductsHeader from "./header"
 
 
 type Product = (typeof initialProducts)[0]
-type Review = (typeof initialProducts)[0]["reviews"][0]
 
 export default function ProductsPage() {
   const [products, setProducts] = useState<Product[]>(initialProducts)
