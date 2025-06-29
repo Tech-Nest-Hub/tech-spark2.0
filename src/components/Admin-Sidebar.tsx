@@ -15,6 +15,7 @@ import {
   SidebarRail,
 } from "@/components/ui/sidebar"
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu"
+import Link from "next/link"
 
 // Navigation items
 const navigationItems = [
@@ -22,16 +23,6 @@ const navigationItems = [
     title: "Dashboard",
     url: "/admin",
     icon: LayoutDashboard,
-  },
-  {
-    title: "Profile",
-    url: "/admin/profile",
-    icon: User,
-  },
-  {
-    title: "Appearance",
-    url: "/admin/appearance",
-    icon: Palette,
   },
 ]
 
@@ -101,7 +92,9 @@ export function AdminSidebar() {
               >
                 <DropdownMenuItem>
                   <User2 />
-                  Account
+                 <Link href="/admin/profile">
+                     Profile
+                    </Link>
                 </DropdownMenuItem>
                 <DropdownMenuItem>
                   <Lock />
