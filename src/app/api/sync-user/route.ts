@@ -4,16 +4,14 @@ import { NextResponse } from "next/server";
 
 export async function POST(): Promise<NextResponse> {
   try {
-    console.log("7");
     const { userId } = await auth();
 
     if (!userId) return new NextResponse("Unauthorized", { status: 401 });
-    console.log(userId);
-    // check if user already exists in your DB
+
     const existing = await prisma.user.findUnique({
       where: { clerkId: userId },
     });
-    console.log("existimng", existing);
+
     if (existing) return NextResponse.json({ user: existing });
     console.log(18);
     // fetch Clerk user
@@ -29,13 +27,11 @@ export async function POST(): Promise<NextResponse> {
       .filter(Boolean)
       .join(" ");
 
-    // create new user in your DB
     const newUser = await prisma.user.create({
       data: {
         clerkId: userId,
         email,
         username,
-        name,
         role: "USER", // Optional: Prisma will default to USER
       },
     });
