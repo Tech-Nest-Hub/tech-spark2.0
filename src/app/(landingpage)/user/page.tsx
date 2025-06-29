@@ -3,20 +3,14 @@
 import { motion } from "framer-motion";
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
-import {
-  Menu,
-  X,
-  ChevronRight,
-  Search,
-} from "lucide-react";
+import { Menu, X, ChevronRight, Search } from "lucide-react";
 
 import axios from "axios";
 import { useClerk, useUser } from "@clerk/nextjs";
 
-import { Button } from "@/components/ui/button"
+import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { FloatingCards, } from "./data";
-
+import { FloatingCards } from "./data";
 
 export default function TechspireMarketplace() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -37,7 +31,6 @@ export default function TechspireMarketplace() {
     }, 2000); // Wait 2 seconds after initial animation
     return () => clearTimeout(timer);
   }, []);
-
 
   useEffect(() => {
     async function syncUser() {
@@ -211,8 +204,6 @@ export default function TechspireMarketplace() {
               transition={{ duration: 0.8, delay: 0.4 }}
               className="flex flex-col sm:flex-row gap-2 justify-center mb-16"
             >
-             
-
               <Input
                 type="text"
                 placeholder="Search for products or startups..."
@@ -292,6 +283,7 @@ export default function TechspireMarketplace() {
         </div>
       </section>
 
+
       {/* Footer */}
       <footer className="bg-gray-900 text-white py-12 px-4 sm:px-6 lg:px-8">
         <div className="max-w-7xl mx-auto">
@@ -339,7 +331,7 @@ export default function TechspireMarketplace() {
                     Features
                   </a>
                 </li>
-                
+
                 <li>
                   <a
                     href="#about"
