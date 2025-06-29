@@ -5,18 +5,9 @@ import { useState, useEffect } from "react"
 import { track , feature} from "@/data/datacenter"
 import {
   ArrowRight,
-  Users,
-  CreditCard,
-  BarChart3,
-  Leaf,
-  UserCheck,
-  Zap,
-  Shield,
-  Network,
   Menu,
   X,
   ChevronRight,
-  Sparkles,
 } from "lucide-react"
 import { Button } from "@/components/ui/button"
 
