@@ -28,3 +28,13 @@ model User {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 }
+
+model Product {
+  id          String  @id @default(uuid())
+  name        String
+  photo       String?
+  tag         String?
+  rating      Int?
+  reviews     String?
+  ecoFriendly Boolean @default(false)
+}

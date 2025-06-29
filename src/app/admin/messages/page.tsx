@@ -9,7 +9,7 @@ import {
   BreadcrumbSeparator,
 } from "@/components/ui/breadcrumb"
 
-export default function RepositoryPage() {
+export default function MessagesPage() {
   return (
     <div className="flex flex-1 flex-col">
       <header className="flex h-16 shrink-0 items-center gap-2 border-b px-4">
@@ -22,7 +22,7 @@ export default function RepositoryPage() {
             </BreadcrumbItem>
             <BreadcrumbSeparator className="hidden md:block" />
             <BreadcrumbItem>
-              <BreadcrumbPage>Repository</BreadcrumbPage>
+              <BreadcrumbPage>Admin Messages</BreadcrumbPage>
             </BreadcrumbItem>
           </BreadcrumbList>
         </Breadcrumb>
@@ -30,9 +30,9 @@ export default function RepositoryPage() {
       <div className="flex flex-1 flex-col gap-4 p-4 pt-0">
         <div className="min-h-[100vh] flex-1 rounded-xl bg-muted/50 md:min-h-min p-8">
           <div className="flex flex-col items-center justify-center h-full min-h-[400px]">
-            <h1 className="text-4xl font-bold text-center mb-4">Repository Management</h1>
+            <h1 className="text-4xl font-bold text-center mb-4">Admin Messages</h1>
             <p className="text-lg text-muted-foreground text-center max-w-2xl">
-              Manage your code repositories and version control settings.
+              Communicate with other administrators and manage internal messages.
             </p>
           </div>
         </div>

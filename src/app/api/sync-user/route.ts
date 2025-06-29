@@ -1,25 +1,48 @@
-import { auth } from "@clerk/nextjs/server";
-import { NextResponse } from "next/server";
-import { clerkClient } from "@clerk/nextjs/server";
-import { prisma } from "@/lib/prisma";
+import prisma from "@/lib/prisma";
+import { auth, clerkClient } from "@clerk/nextjs/server";
+import { NextRequest, NextResponse } from "next/server";
 
-export async function POST(): Promise<NextResponse> {
-  const { userId } = await auth();
-  if (!userId) return new NextResponse("Unauthorized", { status: 401 });
+enum Role {
+  ADMIN = "ADMIN",
+  USER = "USER",
+}
 
-  const existing = await prisma.user.findUnique({ where: { clerkId: userId } });
-  if (existing) return NextResponse.json({ user: existing });
+export async function POST(req: NextRequest): Promise<NextResponse> {
+  try {
+    const { userId } = await auth();
 
-  const clerk = await clerkClient();
-  const clerkUser = await clerk.users.getUser(userId);
-  const email = clerkUser.emailAddresses[0].emailAddress;
-  const name = [clerkUser.firstName, clerkUser.lastName]
-    .filter(Boolean)
-    .join(" ");
+    if (!userId) return new NextResponse("Unauthorized", { status: 401 });
 
-  const newUser = await prisma.user.create({
-    data: { clerkId: userId, email, name },
-  });
+    const existing = await prisma.user.findUnique({
+      where: { clerkId: userId },
+    });
 
-  return NextResponse.json({ user: newUser });
+    if (existing) return NextResponse.json({ user: existing });
+
+    const { searchParams } = new URL(req.url);
+    const role = searchParams.get("role");
+
+    const clerk = await clerkClient();
+    const clerkUser = await clerk.users.getUser(userId);
+
+    const email = clerkUser.emailAddresses[0]?.emailAddress;
+
+    const username = [clerkUser.firstName, clerkUser.lastName]
+      .filter(Boolean)
+      .join(" ");
+
+    const newUser = await prisma.user.create({
+      data: {
+        clerkId: userId,
+        email,
+        username,
+        role: role ? Role.ADMIN : Role.USER,
+      },
+    });
+
+    return NextResponse.json({ user: newUser });
+  } catch (error) {
+    console.log("Error syncing: ", error);
+    return NextResponse.json({ error });
+  }
 }
