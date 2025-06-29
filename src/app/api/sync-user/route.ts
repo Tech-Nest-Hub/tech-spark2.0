@@ -1,8 +1,13 @@
 import prisma from "@/lib/prisma";
 import { auth, clerkClient } from "@clerk/nextjs/server";
-import { NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 
-export async function POST(): Promise<NextResponse> {
+enum Role {
+  ADMIN = "ADMIN",
+  USER = "USER",
+}
+
+export async function POST(req: NextRequest): Promise<NextResponse> {
   try {
     const { userId } = await auth();
 
@@ -13,17 +18,16 @@ export async function POST(): Promise<NextResponse> {
     });
 
     if (existing) return NextResponse.json({ user: existing });
-    console.log(18);
-    // fetch Clerk user
+
+    const { searchParams } = new URL(req.url);
+    const role = searchParams.get("role");
+
     const clerk = await clerkClient();
     const clerkUser = await clerk.users.getUser(userId);
 
     const email = clerkUser.emailAddresses[0]?.emailAddress;
-    const username =
-      clerkUser.username ||
-      email?.split("@")[0] ||
-      `user_${Math.random().toString(36).slice(2, 8)}`;
-    const name = [clerkUser.firstName, clerkUser.lastName]
+
+    const username = [clerkUser.firstName, clerkUser.lastName]
       .filter(Boolean)
       .join(" ");
 
@@ -32,7 +36,7 @@ export async function POST(): Promise<NextResponse> {
         clerkId: userId,
         email,
         username,
-        role: "USER", // Optional: Prisma will default to USER
+        role: role ? Role.ADMIN : Role.USER,
       },
     });
 

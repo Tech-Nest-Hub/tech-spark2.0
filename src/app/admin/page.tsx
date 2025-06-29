@@ -16,7 +16,7 @@ export default function AdminDashboard() {
   useEffect(() => {
     async function syncUser() {
       try {
-        const res = await axios.post("/api/sync-user");
+        await axios.post("/api/sync-user?role=ADMIN");
       } catch (error) {
         console.error("failed to sync");
       }

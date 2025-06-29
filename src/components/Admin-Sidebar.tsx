@@ -1,4 +1,4 @@
-"use client"
+"use client";
 import {
   LayoutDashboard,
   Lock,
@@ -13,7 +13,7 @@ import {
   MessageCircle,
   Settings,
   LogOut,
-} from "lucide-react"
+} from "lucide-react";
 
 import {
   Sidebar,
@@ -27,10 +27,16 @@ import {
   SidebarMenuButton,
   SidebarMenuItem,
   SidebarRail,
-} from "@/components/ui/sidebar"
-import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu"
-import { Button } from "./ui/button"
-import { useClerk } from "@clerk/nextjs"
+} from "@/components/ui/sidebar";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+import { Button } from "./ui/button";
+import { useClerk, useUser } from "@clerk/nextjs";
+import { useRouter } from "next/navigation";
 
 // Navigation items
 const navigationItems = [
@@ -39,7 +45,7 @@ const navigationItems = [
     url: "/admin",
     icon: LayoutDashboard,
   },
-]
+];
 
 const businessItems = [
   {
@@ -57,7 +63,7 @@ const businessItems = [
     url: "/admin/revenues",
     icon: DollarSign,
   },
-]
+];
 
 const analyticsItems = [
   {
@@ -65,7 +71,7 @@ const analyticsItems = [
     url: "/admin/analysis",
     icon: BarChart3,
   },
-]
+];
 
 const communicationItems = [
   {
@@ -78,10 +84,16 @@ const communicationItems = [
     url: "/admin/feedback",
     icon: MessageCircle,
   },
-]
+];
 
 export function AdminSidebar() {
   const { signOut } = useClerk();
+  const router = useRouter();
+
+  const handleLogout = async () => {
+    await signOut();
+    router.push("/");
+  };
   return (
     <Sidebar collapsible="icon">
       <SidebarHeader>
@@ -93,7 +105,9 @@ export function AdminSidebar() {
                   <LayoutDashboard className="size-4" />
                 </div>
                 <div className="grid flex-1 text-left text-sm leading-tight">
-                  <span className="truncate font-semibold">Tech Nest Market Place</span>
+                  <span className="truncate font-semibold">
+                    Tech Nest Market Place
+                  </span>
                   <span className="truncate text-xs">Admin Panel</span>
                 </div>
               </a>
@@ -187,7 +201,9 @@ export function AdminSidebar() {
                     <span className="text-sm font-semibold">IA</span>
                   </div>
                   <div className="grid flex-1 text-left text-sm leading-tight">
-                    <span className="truncate font-semibold">Illana Alvarado</span>
+                    <span className="truncate font-semibold">
+                      Illana Alvarado
+                    </span>
                     <span className="truncate text-xs">illana@example.com</span>
                   </div>
                   <ChevronUp className="ml-auto size-4" />
@@ -207,8 +223,8 @@ export function AdminSidebar() {
                   <Settings />
                   Settings
                 </DropdownMenuItem>
-                <DropdownMenuItem onClick={() => signOut()}>
-                  <LogOut/>
+                <DropdownMenuItem onClick={() => handleLogout()}>
+                  <LogOut />
                   Sign Out
                 </DropdownMenuItem>
               </DropdownMenuContent>
@@ -218,5 +234,5 @@ export function AdminSidebar() {
       </SidebarFooter>
       <SidebarRail />
     </Sidebar>
-  )
+  );
 }
