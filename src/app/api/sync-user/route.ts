@@ -15,7 +15,7 @@ export async function POST(): Promise<NextResponse> {
     });
     console.log("existimng", existing);
     if (existing) return NextResponse.json({ user: existing });
-
+    console.log(18);
     // fetch Clerk user
     const clerk = await clerkClient();
     const clerkUser = await clerk.users.getUser(userId);
