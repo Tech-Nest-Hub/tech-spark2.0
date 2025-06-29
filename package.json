@@ -9,6 +9,8 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@clerk/nextjs": "^6.23.1",
+    "@prisma/client": "^6.10.1",
     "@radix-ui/react-dialog": "^1.1.14",
     "@radix-ui/react-dropdown-menu": "^2.1.15",
     "@radix-ui/react-separator": "^1.1.7",
@@ -17,10 +19,6 @@
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
     "lucide-react": "^0.525.0",
-<<<<<<< HEAD
-=======
-    "@prisma/client": "^6.10.1",
->>>>>>> b7dfaaf125ecfbc28167862a70c1d5175c6195b7
     "next": "15.3.4",
     "next-themes": "^0.4.6",
     "react": "^19.0.0",
