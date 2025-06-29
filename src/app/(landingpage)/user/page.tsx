@@ -19,6 +19,7 @@ import {
 import Navbar from "./Navbar";
 import { motion } from "framer-motion";
 import { Button } from "@/components/ui/button";
+import axios from "axios";
 
 export default function TechspireMarketplace() {
 
