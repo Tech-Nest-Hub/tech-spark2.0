@@ -214,7 +214,7 @@ export default function TechspireMarketplace() {
             {/* Desktop Navigation */}
             <div className="hidden md:flex items-center space-x-8">
               <a
-                href="#home"
+                href="./"
                 className="text-gray-700 hover:text-blue-600 transition-colors"
               >
                 Home
@@ -355,7 +355,7 @@ export default function TechspireMarketplace() {
                 placeholder="Search for products or startups..."
                 className="w-full sm:w-80 bg-white border border-gray-300 rounded-lg px-4 py-4  focus:outline-none focus:ring-2 focus:ring-blue-600 transition-colors"
               />
-              
+
               <button className="border border-slate-500 cursor-pointer rounded-full p-2"><Search className="w-5 h-4 " /></button>
 
               
